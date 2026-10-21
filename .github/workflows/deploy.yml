@@ -38,7 +38,7 @@ jobs:
         run: node src/build.mjs --base=/RealLocalCost/
 
       - name: Check the data
-        run: node tools/check.mjs
+        run: node tools/check.mjs --base=/RealLocalCost/
 
       - name: Refresh the social card
         run: node tools/make-og.mjs

@@ -133,6 +133,11 @@ try {
   warn("site/ not built yet — run `npm run build`");
 }
 
+/* the base the site was built with — the URL prefix, not the file layout */
+const baseArg = process.argv.find((a) => a.startsWith("--base="));
+const BASE = baseArg ? baseArg.split("=").slice(1).join("=") : "/";
+const BASE_NORM = BASE.endsWith("/") ? BASE : BASE + "/";
+
 /* every internal link must resolve to a real file */
 try {
   const { readdir, stat } = await import("node:fs/promises");
@@ -154,8 +159,12 @@ try {
   for (const f of files) {
     const html = await readFile(f, "utf8");
     for (const m of html.matchAll(/href="(\/[^"#?]*)/g)) {
-      const href = m[1];
+      let href = m[1];
       if (href.startsWith("/assets/") || href.startsWith("/data/")) continue;
+      /* the base is a URL prefix, not a directory on disk */
+      if (BASE_NORM !== "/" && href.startsWith(BASE_NORM)) {
+        href = "/" + href.slice(BASE_NORM.length);
+      }
       const target = href.endsWith("/")
         ? j(ROOT, "site", href, "index.html")
         : j(ROOT, "site", href);
