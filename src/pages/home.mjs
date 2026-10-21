@@ -4,6 +4,7 @@ import { panel, verifiedBadge, num } from "../layout.mjs";
 import { barChart } from "../lib/chart.mjs";
 import { servicePath, marketPath, pairPath, pagePath } from "../lib/paths.mjs";
 import { flagshipPlan, eciCell, priceCell, planLabel, changeChip, coverageStats } from "./common.mjs";
+import { SITE } from "../lib/config.mjs";
 
 export function renderHome(ctx) {
   const { t, locale, data } = ctx;
@@ -117,8 +118,8 @@ export function renderHome(ctx) {
 
   const body = `
   <section class="hero">
-    <h1>${escapeHtml(t("home.title"))}</h1>
-    <p class="lede">${escapeHtml(t("home.lede"))}</p>
+    <h1>${escapeHtml(SITE.name)}</h1>
+    <p class="lede">${escapeHtml(SITE.tagline[locale] || SITE.tagline.en)}</p>
     ${statRow}
   </section>
 
@@ -148,8 +149,8 @@ export function renderHome(ctx) {
   `;
 
   return {
-    title: t("home.title"),
-    description: t("home.lede"),
+    title: `${SITE.name} — ${SITE.tagline[locale] || SITE.tagline.en}`,
+    description: SITE.description[locale] || SITE.description.en,
     body,
   };
 }

@@ -1,0 +1,79 @@
+<!doctype html>
+<!-- The social card. Rendered to public/og.png by tools/make-og.mjs.
+     Keep it 1280×630: that is the size every platform crops to. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  :root{
+    --bg:#0d0f13; --panel:#14161c; --border:#262a33;
+    --text:#e7e9ee; --dim:#9aa1af; --faint:#6b7280;
+    --teal:#3ddbd9; --green:#4cc38a; --amber:#f5a524; --blue:#7aa2ff;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1280px;height:630px;background:var(--bg);color:var(--text);
+    font-family:var(--sans);-webkit-font-smoothing:antialiased;
+    padding:46px 64px;overflow:hidden;position:relative;
+  }
+  .brand{position:absolute;left:64px;top:46px}
+  .main{position:absolute;left:64px;right:64px;top:132px}
+  .foot{position:absolute;left:64px;right:64px;bottom:44px}
+  body::after{
+    content:"";position:absolute;right:-180px;top:-180px;width:640px;height:640px;
+    background:radial-gradient(circle,rgba(61,219,217,.13) 0%,rgba(13,15,19,0) 68%);
+  }
+  .brand{font-size:23px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+  .tri{color:var(--teal);font-size:19px}
+  h1{font-size:50px;line-height:1.12;letter-spacing:-.028em;max-width:22ch;font-weight:800}
+  h1 em{font-style:normal;color:var(--teal)}
+  .sub{color:var(--dim);font-size:21px;line-height:1.4;max-width:56ch;margin-top:18px}
+  table{border-collapse:separate;border-spacing:0 6px;margin-top:26px}
+  td{padding:0 18px 0 0;font-size:20px}
+  td.mkt{color:var(--text);font-weight:600}
+  td.val{font-family:var(--mono);font-weight:700;text-align:right;width:104px;font-size:19px}
+  td.bar{width:260px}
+  .track{height:11px;border-radius:6px;background:#1b1f27;overflow:hidden}
+  .fill{height:100%;border-radius:6px}
+  .foot{color:var(--faint);font-size:16px;display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+  .foot b{color:var(--dim);font-weight:600}
+  .pill{border:1px solid var(--border);background:var(--panel);border-radius:5px;padding:4px 11px;
+        font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);font-weight:700}
+</style>
+</head>
+<body>
+  <div class="brand"><span class="tri">▾</span> Real Local Cost</div>
+
+  <div class="main">
+    <h1>The same subscription, <em>in every market</em>.</h1>
+    <p class="sub">Spotify Premium, as a share of what people actually earn where you live.</p>
+
+    <table>
+      <tr>
+        <td class="mkt">Tunisia</td>
+        <td class="bar"><div class="track"><div class="fill" style="width:100%;background:var(--teal)"></div></div></td>
+        <td class="val" style="color:var(--teal)">1.10%</td>
+      </tr>
+      <tr>
+        <td class="mkt">Egypt</td>
+        <td class="bar"><div class="track"><div class="fill" style="width:59%;background:var(--teal)"></div></div></td>
+        <td class="val" style="color:var(--teal)">0.65%</td>
+      </tr>
+      <tr>
+        <td class="mkt">France</td>
+        <td class="bar"><div class="track"><div class="fill" style="width:30%;background:var(--green)"></div></div></td>
+        <td class="val" style="color:var(--green)">0.33%</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="foot">
+    <span class="pill">Verified prices</span>
+    <span class="pill">EN · FR · AR</span>
+    <span class="pill">Free data, CC0</span>
+    <span style="margin-left:auto"><b>reallocalcost.pages.dev</b></span>
+  </div>
+</body>
+</html>

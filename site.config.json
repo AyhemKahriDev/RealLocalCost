@@ -1,0 +1,24 @@
+{
+  "_comment": "Site identity. The brand does not translate — only the tagline and the copy do. One place to change the name, the canonical URL and the repository.",
+
+  "name": "Real Local Cost",
+  "wordmark": "Real Local Cost",
+  "tagline": {
+    "en": "What digital services actually cost, where you live, as a share of what people earn there.",
+    "fr": "Ce que les services numériques coûtent vraiment, chez vous, au regard de ce que les gens y gagnent.",
+    "ar": "كم تكلّف الخدمات الرقمية فعلياً في بلدك، مقارنةً بما يكسبه الناس فيه."
+  },
+  "description": {
+    "en": "Netflix, Spotify and Apple TV+ priced in every market's own currency, then divided by what people earn there — so the number means the same thing everywhere.",
+    "fr": "Netflix, Spotify et Apple TV+ tarifés dans la devise de chaque marché, puis divisés par ce que les gens y gagnent — pour que le chiffre signifie la même chose partout.",
+    "ar": "نتفليكس وسبوتيفاي وآبل تي في ب 것으로 تسعّر في عملة كل سوق، ثم تُقسَم على ما يكسبه الناس هناك — ليصبح الرقم يعني الشيء نفسه في كل مكان."
+  },
+  "url": "https://reallocalcost.pages.dev",
+  "fallbackUrl": "https://ayhemkahridev.github.io/RealLocalCost/",
+  "repo": "https://github.com/AyhemKahriDev/RealLocalCost",
+
+  "data": {
+    "license": "CC0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+  }
+}

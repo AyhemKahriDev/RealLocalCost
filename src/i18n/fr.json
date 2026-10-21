@@ -36,7 +36,6 @@
     "coverageLede": "Quelle part de la base a été contrôlée dans les trente derniers jours."
   },
   "home": {
-    "title": "The Real Local Cost",
     "lede": "Netflix coûte 15 dollars dans un pays et le prix d'une semaine de courses dans le suivant. Nous convertissons les services numériques dans la devise de chaque marché, puis les divisons par ce que les gens y gagnent — pour que le chiffre signifie la même chose partout.",
     "statMarkets": "marchés tarifés",
     "statServices": "services suivis",

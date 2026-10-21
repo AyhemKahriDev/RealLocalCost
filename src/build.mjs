@@ -11,6 +11,7 @@ import { readFile, writeFile, mkdir, rm, cp } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { loadAll } from "./lib/data.mjs";
+import { loadSite, applySite, SITE } from "./lib/config.mjs";
 import { loadAllLocales, makeT, LOCALES, DIR, HTML_LANG, LOCALE_NAME } from "./lib/i18n.mjs";
 import { layout } from "./layout.mjs";
 import {
@@ -24,7 +25,7 @@ import { renderMethod, renderWire, renderData } from "./pages/static.mjs";
 import { renderServices, renderMarkets } from "./pages/indexes.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SITE = join(ROOT, "site");
+const SITE_DIR = join(ROOT, "site");
 
 async function writePage(path, html) {
   const file = toFile(path);
@@ -46,11 +47,12 @@ function page(ctx, rendered, alternates) {
 }
 
 async function main() {
+  applySite(await loadSite());
   const data = await loadAll();
   const dicts = await loadAllLocales();
 
-  await rm(SITE, { recursive: true, force: true });
-  await mkdir(SITE, { recursive: true });
+  await rm(SITE_DIR, { recursive: true, force: true });
+  await mkdir(SITE_DIR, { recursive: true });
 
   const written = [];
   const sitemaps = [];
@@ -108,16 +110,27 @@ async function main() {
   }
 
   /* ---- public assets ---- */
-  await cp(join(ROOT, "public"), join(SITE, "assets"), { recursive: true });
+  await cp(join(ROOT, "public"), join(SITE_DIR, "assets"), { recursive: true });
+  // og.html is the source of the social card, not a page anyone visits.
+  await rm(join(SITE_DIR, "assets", "og.html"), { force: true });
+  // The social card sits at the root so the meta tag has one stable URL.
+  try {
+    await cp(join(ROOT, "public", "og.png"), join(SITE_DIR, "og.png"));
+  } catch {
+    console.log("no public/og.png — run `node tools/make-og.mjs` for the social card");
+  }
 
   /* ---- the data files the site publishes ---- */
-  await mkdir(join(SITE, "data"), { recursive: true });
+  await mkdir(join(SITE_DIR, "data"), { recursive: true });
   await writeFile(
-    join(SITE, "data", "prices.json"),
+    join(SITE_DIR, "data", "prices.json"),
     JSON.stringify(
       {
         _comment:
-          "The Real Local Cost — verified prices with history and receipts. CC0. https://github.com/AyhemKahriDev/TheRealLocalCost",
+          `${SITE.name} — verified prices with history and receipts. ${SITE.data.license}. ${SITE.repo}`,
+        source: SITE.url,
+        repository: SITE.repo,
+        license: SITE.data.license,
         updatedAt: data.pricesUpdatedAt,
         rows: data.rows,
       },
@@ -125,8 +138,8 @@ async function main() {
       2
     ) + "\n"
   );
-  await writeFile(join(SITE, "data", "prices.csv"), toCsv(data.rows));
-  await cp(join(ROOT, "data", "income.json"), join(SITE, "data", "income.json"));
+  await writeFile(join(SITE_DIR, "data", "prices.csv"), toCsv(data.rows));
+  await cp(join(ROOT, "data", "income.json"), join(SITE_DIR, "data", "income.json"));
 
   /* ---- sitemap ---- */
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -144,8 +157,8 @@ ${sitemaps
   .join("\n")}
 </urlset>
 `;
-  await writeFile(join(SITE, "sitemap.xml"), xml);
-  await writeFile(join(SITE, "robots.txt"), "User-agent: *\nAllow: /\nSitemap: /sitemap.xml\n");
+  await writeFile(join(SITE_DIR, "sitemap.xml"), xml);
+  await writeFile(join(SITE_DIR, "robots.txt"), "User-agent: *\nAllow: /\nSitemap: /sitemap.xml\n");
 
   console.log(`built ${written.length} pages → site/`);
   console.log(

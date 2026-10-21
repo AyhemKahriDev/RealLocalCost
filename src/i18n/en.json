@@ -36,7 +36,6 @@
     "coverageLede": "How much of the database has been checked in the last 30 days."
   },
   "home": {
-    "title": "The Real Local Cost",
     "lede": "Netflix is $15 in one country and the price of a week of groceries in the next. We price digital services in each market's own currency, then divide by what people earn there — so the number means the same thing everywhere.",
     "statMarkets": "markets priced",
     "statServices": "services tracked",

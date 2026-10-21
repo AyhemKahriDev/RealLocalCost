@@ -1,5 +1,11 @@
 name: Deploy
 
+# One build, two homes:
+#   • Cloudflare Pages  → reallocalcost.pages.dev   (the canonical URL)
+#   • GitHub Pages      → ayhemkahridev.github.io/RealLocalCost/  (the mirror)
+#
+# Both come from the same site/ directory, so they cannot disagree.
+
 on:
   push:
     branches: [main]
@@ -17,6 +23,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages-url: ${{ steps.pages.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -30,13 +38,52 @@ jobs:
       - name: Check the data
         run: node tools/check.mjs
 
-      - uses: actions/configure-pages@v5
+      - name: Refresh the social card
+        run: node tools/make-og.mjs
+        continue-on-error: true
+
+      - name: Rebuild with the social card in place
+        run: node src/build.mjs
+
+      - id: pages
+        uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
 
-  deploy:
+  cloudflare:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build the site
+        run: node src/build.mjs
+
+      # wrangler reads its OAuth credentials from this file and refreshes
+      # them itself when they expire, so the deploy needs no API token.
+      - name: Restore the Cloudflare credentials
+        env:
+          CF_WRANGLER_CONFIG: ${{ secrets.CF_WRANGLER_CONFIG }}
+        run: |
+          mkdir -p ~/.config/.wrangler/config
+          printf '%s' "$CF_WRANGLER_CONFIG" > ~/.config/.wrangler/config/default.toml
+
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          npx --yes wrangler@4.151.3 pages deploy site \
+            --project-name=reallocalcost \
+            --branch=main \
+            --commit-dirty=true
+
+  github-pages:
     needs: build
     runs-on: ubuntu-latest
     environment:
