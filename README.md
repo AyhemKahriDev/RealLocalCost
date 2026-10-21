@@ -23,6 +23,8 @@ ECI = local monthly price ÷ monthly per-capita income × 100
 Read it as a share. An ECI of 1.5 means the subscription costs one and a half percent of a
 month of per-capita income.
 
+**365 verified prices · 65 markets · 9 services · 3 languages · 852 pages**
+
 | Service | Market | Price | ECI |
 |---|---|---|---|
 | Spotify Premium Individual | France | 12,14 € | **0.33%** |
@@ -47,6 +49,14 @@ Saudi Arabia prices Spotify in riyals and calls the tiers "Standard" and "Platin
 is not sold standalone in Egypt at all — it comes bundled into iCloud+. The same nominal product
 is a different product in a different market, and the site has to say so.
 
+### And the other half of the story
+
+Some services do not price for your market at all. Notion charges **US$20 — the same number
+everywhere**. In Nigeria that is **20.2% of a month's income**. In Argentina it is **1.6%**. The
+price never changed; the country did. The site converts a global price at the World Bank's
+official rate so the two can be compared, and marks every row as either *priced for this
+market* or *the same price everywhere*.
+
 **The denominator** is World Bank indicator `NY.GNP.PCAP.CN` — GNI per capita in current local
 currency, divided by twelve. Free, keyless, sixty years of history, every country.
 
@@ -57,25 +67,47 @@ by a person and written down with a date.
 
 ## The honesty model
 
-The machine never writes a price. Ever.
+The machine never invents a price. But it can notice that the page it read yesterday says
+something different today, and it can read that difference reliably enough to publish it.
 
 ```
-fetch → hash → changed? → alert a human → human re-reads the price → human writes it down
+fetch → read → CONFIDENT?  → publish it, with the receipt and the date
+                   UNSURE  → raise an alert for a human
 ```
 
-- `tools/harvest.mjs` reads pricing pages and **proposes** candidate prices into
-  `data/candidates.json`. It is a machine reading a page, not a source of truth.
-- `data/prices.json` is the published database. Every row carries a `verified` date and a
-  `receipt` URL. A row without both is a bug, and `tools/check.mjs` fails the build on it.
-- `tools/watch.mjs` runs nightly. It hashes each pricing page and compares the hash with the
-  last one. When a page changes it raises an alert — it does **not** update the price.
-- Rows carry their own staleness. The site publishes what share of the database was checked in
-  the last 30 days, because a number without a date is not a number.
+A price is **confident** when all of these hold:
+
+1. It is quoted in **the market's own currency**. A page showing a dollar price to a Tunisian
+   subscriber is not a Tunisian price. If the service quotes one global price, the machine
+   converts it at the World Bank's official rate and marks the row *the same price everywhere*.
+2. A **plan name** sits next to it, so we know which plan it is. Plan names are paired with
+   prices by an optimal **monotonic** assignment — in a price list the names and the prices
+   run in the same order, and a greedy nearest-neighbour gets that wrong.
+3. It is within a plausible band of the last published price. Prices move; they do not teleport.
+4. No other plan in the same market claims the same number on the same scrape.
+5. It reads as the standing **monthly** price — not an introductory rate, not a bundle total,
+   not a one-off payment. A page offering both "45 MAD a month" and "450 MAD for the year" is
+   asking the reader to pick, and the machine picks the one the page quotes most often.
+
+Everything else becomes an alert. `tools/auto-update.mjs` publishes the confident ones and
+files the rest; the *Keep current* workflow runs it every six hours, commits what changed,
+and opens an issue for the prices it could not read.
 
 The wire (`/wire`) is generated from the price history by `tools/make-changes.mjs`, so the feed
-and the tables can never disagree.
+and the tables can never disagree. `tools/check.mjs` fails the build on a row without a
+`verified` date or a receipt, and checks every internal link on every page.
 
----
+### What the machine had to learn to get right
+
+- **A dollar sign is not a currency.** "4,950" is 4,95 in Tunis and 4,950 in Chicago, and the
+  market decides. A bare "$" in an English page is dollars; in the Argentine storefront it is
+  pesos — so the page's own language settles it.
+- **"kr" is two currencies.** Kronor in Sweden, kroner in Denmark. The market knows which.
+- **Promotions are not prices.** "22,50 MAD for 6 months, then 45 MAD a month" has two numbers,
+  and the standing price is the second one.
+- **A number next to a "$" is not always a price.** "1 of 9" inherits the dollar sign from the
+  price above it unless the currency is read from the number's immediate neighbourhood.
+
 
 ## Everything is free
 
@@ -87,7 +119,8 @@ No budget, no keys, no accounts, no paid APIs, no AI tokens.
 | Domain | `*.eu.org` (human-reviewed, slow) → interim `*.github.io` | no |
 | DNS | deSEC | no |
 | CI | GitHub Actions (public repos get unlimited minutes) | no |
-| Income data | World Bank API | no |
+| Income data | World Bank API — `NY.GNP.PCAP.CN`, GNI per capita, local currency | no |
+| Exchange rates | World Bank API — `PA.NUS.FCRF`, official LCU per USD | no |
 | Price history | The Wayback Machine CDX + snapshots | no |
 | App-store data | iTunes Lookup API | no |
 | Newsletter | Buttondown / Beehiiv / Resend free tiers | no |
@@ -105,7 +138,8 @@ No budget, no keys, no accounts, no paid APIs, no AI tokens.
 
 ```sh
 node tools/pull-income.mjs      # World Bank → data/income.json
-node tools/harvest.mjs          # machine proposes → data/candidates.json
+node tools/pull-fx.mjs          # World Bank → data/fx.json
+node tools/auto-update.mjs      # read every page: publish the sure ones, alert the rest
 node tools/make-changes.mjs     # derive the wire from the history
 node src/build.mjs              # → site/
 node tools/check.mjs            # the integrity gate
@@ -218,16 +252,28 @@ while you wait.
 
 ---
 
+## The pages
+
+| Page | What it is |
+|---|---|
+| `/` | The flagship: one subscription, every market, ranked by share of income |
+| `/markets/` | Every market we price, and what a month's income is there |
+| `/services/` | Every service, and how many markets it actually prices for |
+| `/localises/` | **Who prices for your market, and who does not** — the verdict, service by service |
+| `/cheapest/` | The cheapest way to watch, market by market |
+| `/calculator/` | "What does it cost where I live?" — shareable, works without JavaScript |
+| `/method/` | The formula, the sources, and the honesty model |
+| `/wire/` | Every verified price move, newest first |
+| `/data/` | The whole dataset, free, CC0 |
+
 ## Roadmap
 
-- [x] ECI metric, three markets, three locales
-- [x] Automated price history from the Wayback Machine
-- [x] The watcher, the wire, the data page
-- [ ] More services: Netflix, Apple TV+, YouTube Premium, ChatGPT Plus, Deezer
-- [ ] More markets: Saudi Arabia, Morocco, Türkiye, Argentina
-- [ ] Volatility markets — Türkiye and Argentina reprice monthly with inflation
+- [x] ECI metric, 65 markets, three locales
+- [x] The machine keeps itself current, every six hours
+- [x] Global prices converted at official rates, and marked as such
+- [x] 852 pages in EN / FR / AR
+- [ ] More services: Netflix, YouTube Premium, ChatGPT Plus, Adobe, Discord, Canva
 - [ ] The annual report, in three languages
-- [ ] A calculator that answers "what does Netflix cost where I live?"
 - [ ] Affiliate links, once a programme genuinely exists (no invented links)
 
 ---
