@@ -2,8 +2,22 @@
 
 **What digital services actually cost, where you live, as a share of what people earn there.**
 
-> **Live:** <https://reallocalcost.pages.dev> · mirror: <https://ayhemkahridev.github.io/RealLocalCost/> ·
+> **Live:** <https://ayhemkahridev.github.io/RealLocalCost/>
 > code and data: <https://github.com/AyhemKahriDev/RealLocalCost>
+>
+> The Cloudflare Pages copy at <https://reallocalcost.pages.dev> is the nicer domain, but it
+> only updates once a Cloudflare API token is added as a repo secret. Until then the
+> GitHub Pages copy is the current one, so it is the canonical. The token takes thirty
+> seconds:
+>
+> ```sh
+> # Cloudflare dashboard → My Profile → API Tokens → Create Token
+> #   Permissions: Account → Cloudflare Pages → Edit
+> gh secret set CLOUDFLARE_API_TOKEN --repo AyhemKahriDev/RealLocalCost
+> ```
+>
+> After that, every push deploys to both, and the canonical flips back to
+> `reallocalcost.pages.dev` with one line in `site.config.json`.
 
 Netflix is $15 in one country and the price of a week of groceries in the next. This project
 prices digital subscriptions in each market's own currency, then divides by what people earn
@@ -213,8 +227,8 @@ Two homes, one build:
 
 | | URL | How it deploys |
 |---|---|---|
-| **Cloudflare Pages** (canonical) | `reallocalcost.pages.dev` | `npm run deploy`, or CI once an API token is added |
-| GitHub Pages (mirror) | `ayhemkahridev.github.io/RealLocalCost/` | automatically on every push to `main` |
+| **GitHub Pages** (canonical) | `ayhemkahridev.github.io/RealLocalCost/` | automatically on every push to `main` |
+| Cloudflare Pages | `reallocalcost.pages.dev` | `npm run deploy`, or CI once an API token is added |
 
 Both are built from the same `site/` directory, so they cannot disagree.
 
