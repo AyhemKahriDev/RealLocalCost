@@ -122,6 +122,53 @@ try {
   warn("site/ not built yet — run `npm run build`");
 }
 
+/* every internal link must resolve to a real file */
+try {
+  const { readdir, stat } = await import("node:fs/promises");
+  const { join: j } = await import("node:path");
+
+  async function walk(dir, out = []) {
+    for (const e of await readdir(dir, { withFileTypes: true })) {
+      const p = j(dir, e.name);
+      if (e.isDirectory()) await walk(p, out);
+      else if (e.name.endsWith(".html")) out.push(p);
+    }
+    return out;
+  }
+
+  const files = await walk(join(ROOT, "site"));
+  let checked = 0;
+  const broken = new Set();
+
+  for (const f of files) {
+    const html = await readFile(f, "utf8");
+    for (const m of html.matchAll(/href="(\/[^"#?]*)/g)) {
+      const href = m[1];
+      if (href.startsWith("/assets/") || href.startsWith("/data/")) continue;
+      const target = href.endsWith("/")
+        ? j(ROOT, "site", href, "index.html")
+        : j(ROOT, "site", href);
+      checked++;
+      let ok = false;
+      try {
+        const s = await stat(target);
+        ok = s.isFile() || (s.isDirectory() && false);
+      } catch {
+        ok = false;
+      }
+      if (!ok) broken.add(`${href}  (from ${f.replace(join(ROOT, "site"), "")})`);
+    }
+  }
+
+  if (broken.size) {
+    for (const b of [...broken].slice(0, 25)) err(`broken link: ${b}`);
+    if (broken.size > 25) err(`…and ${broken.size - 25} more broken links`);
+  }
+  console.log(`links: ${checked} internal hrefs checked across ${files.length} pages`);
+} catch (e) {
+  warn(`link check skipped: ${e.message}`);
+}
+
 console.log(`\n${rows.length} rows, ${errors.length} error(s), ${warnings.length} warning(s)`);
 for (const w of warnings) console.log(`  warn  ${w}`);
 for (const e of errors) console.log(`  ERROR ${e}`);

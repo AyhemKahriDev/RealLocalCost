@@ -2,7 +2,11 @@
   "nav": {
     "method": "Méthode",
     "wire": "Le fil",
-    "data": "Données"
+    "data": "Données",
+    "services": "Services",
+    "servicesLede": "Chaque service que nous suivons, et les marchés où nous l'avons vérifié.",
+    "markets": "Marchés",
+    "marketsLede": "Chaque marché que nous tarifons, et ce qu'y vaut un mois de revenu par habitant."
   },
   "footer": {
     "tagline": "Ce que les services numériques coûtent vraiment, chez vous, au regard de ce que les gens y gagnent.",
@@ -144,7 +148,41 @@
     "rowReceipt": "URL du justificatif",
     "rowHistory": "Points de prix datés",
     "rowPlan": "Identifiant canonique du forfait",
-    "rowCurrency": "Devise du prix"
+    "rowCurrency": "Devise du prix",
+    "schema": [
+      [
+        "service",
+        "Identifiant du service, p. ex. spotify. Correspond au chemin /{service}/."
+      ],
+      [
+        "market",
+        "Code du marché, p. ex. tn. Correspond au chemin /m/{market}/."
+      ],
+      [
+        "plan",
+        "Identifiant canonique du forfait, p. ex. individual, family, standard."
+      ],
+      [
+        "price",
+        "Prix mensuel, dans la devise du marché."
+      ],
+      [
+        "currency",
+        "Code ISO : TND, EGP, EUR, SAR, MAD."
+      ],
+      [
+        "history",
+        "Tableau de {date, price} — chaque point daté que nous avons vérifié."
+      ],
+      [
+        "verified",
+        "La date où une personne a lu ce prix pour la dernière fois."
+      ],
+      [
+        "receipt",
+        "Où le prix a été lu."
+      ]
+    ]
   },
   "plan": {
     "individual": "Individuel",

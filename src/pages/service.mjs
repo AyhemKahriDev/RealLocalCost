@@ -1,4 +1,4 @@
-import { escapeHtml, formatPrice, formatPricePlain, formatDate } from "../lib/fmt.mjs";
+import { escapeHtml, formatPrice, formatPricePlain, formatDate, arrow } from "../lib/fmt.mjs";
 import { eci, band, changeOver } from "../lib/eci.mjs";
 import { panel, verifiedBadge, num } from "../layout.mjs";
 import { lineChart } from "../lib/chart.mjs";
@@ -41,7 +41,7 @@ export function renderService(ctx, serviceId) {
         <td class="num">${eciCell(r, income, locale, t)}</td>
         <td class="num">${changeChip(r, t, locale)}</td>
         <td>${verifiedBadge(t, r)}</td>
-        <td><a href="${escapeHtml(pairPath(serviceId, mid, locale))}">${escapeHtml(t("common.readMore"))} →</a></td>
+        <td><a href="${escapeHtml(pairPath(serviceId, mid, locale))}">${escapeHtml(t("common.readMore"))} ${arrow(locale)}</a></td>
       </tr>`);
     }
   }

@@ -47,6 +47,7 @@ export async function loadAll() {
     changes: changesRaw.changes || [],
     pricesUpdatedAt: pricesRaw.updatedAt || null,
     alternatives: alternativesRaw.entries || [],
+    notes: alternativesRaw.notes || {},
     rows,
     byKey,
     pairs,

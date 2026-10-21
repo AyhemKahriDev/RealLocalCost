@@ -2,7 +2,11 @@
   "nav": {
     "method": "Method",
     "wire": "The wire",
-    "data": "Data"
+    "data": "Data",
+    "services": "Services",
+    "servicesLede": "Every service we track, and the markets we have verified it in.",
+    "markets": "Markets",
+    "marketsLede": "Every market we price, and what a month of per-capita income is there."
   },
   "footer": {
     "tagline": "What digital services actually cost, where you live, as a share of what people earn there.",
@@ -144,7 +148,41 @@
     "rowReceipt": "Receipt URL",
     "rowHistory": "Dated price points",
     "rowPlan": "Canonical plan id",
-    "rowCurrency": "Currency of the price"
+    "rowCurrency": "Currency of the price",
+    "schema": [
+      [
+        "service",
+        "Service id, e.g. spotify. Matches the /{service}/ path."
+      ],
+      [
+        "market",
+        "Market code, e.g. tn. Matches the /m/{market}/ path."
+      ],
+      [
+        "plan",
+        "Canonical plan id, e.g. individual, family, standard."
+      ],
+      [
+        "price",
+        "Monthly price, in the market's own currency."
+      ],
+      [
+        "currency",
+        "ISO code: TND, EGP, EUR, SAR, MAD."
+      ],
+      [
+        "history",
+        "Array of {date, price} — every dated point we have verified."
+      ],
+      [
+        "verified",
+        "The date a human last read this price."
+      ],
+      [
+        "receipt",
+        "Where the price was read from."
+      ]
+    ]
   },
   "plan": {
     "individual": "Individual",

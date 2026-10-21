@@ -106,6 +106,10 @@ export function renderPair(ctx, serviceId, marketId) {
         .join("")}</ul>`
     : "";
 
+  /* the practical note: how people in this market actually pay */
+  const marketNotes = data.notes && data.notes[marketId] ? data.notes[marketId] : {};
+  const howNote = marketNotes[serviceId] || null;
+
   const related = data.rowsForMarket(marketId).filter((r) => r.service !== serviceId);
   const relatedList = related.length
     ? `<div class="tablewrap"><table class="rows">
@@ -176,6 +180,11 @@ export function renderPair(ctx, serviceId, marketId) {
     </div>
     <div>
       ${receipt}
+      ${
+        howNote
+          ? panel(t("pair.howTitle"), `<p>${escapeHtml(howNote)}</p><p class="small faint">${escapeHtml(t("pair.howLede"))}</p>`)
+          : ""
+      }
       ${
         alternatives
           ? panel(t("pair.altTitle"), `${alternatives}<p class="small faint">${escapeHtml(t("pair.altLede"))}</p>`)

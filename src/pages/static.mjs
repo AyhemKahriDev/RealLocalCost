@@ -1,4 +1,4 @@
-import { escapeHtml, formatPrice, formatDate } from "../lib/fmt.mjs";
+import { escapeHtml, formatPrice, formatDate, arrow } from "../lib/fmt.mjs";
 import { panel, num } from "../layout.mjs";
 import { coverageStats } from "./common.mjs";
 import { servicePath, marketPath, pairPath } from "../lib/paths.mjs";
@@ -75,7 +75,7 @@ export function renderWire(ctx) {
               <div class="wl-title"><a href="${escapeHtml(pairPath(c.service, c.market, locale))}">${escapeHtml(svc ? svc.name : c.service)}</a> · ${escapeHtml(m ? (m.nameLocal[locale] || m.name) : c.market)} · ${escapeHtml(c.plan)}</div>
               <div class="wl-delta">
                 <span class="mono">${escapeHtml(formatPrice(c.from, c.currency, locale))}</span>
-                <span class="arrow">→</span>
+                <span class="arrow">${arrow(locale)}</span>
                 <span class="mono ${up ? "up" : "down"}">${escapeHtml(formatPrice(c.to, c.currency, locale))}</span>
                 <span class="delta ${up ? "up" : "down"}">${up ? "▲" : "▼"} ${num(Math.abs(pct))}%</span>
               </div>
@@ -103,16 +103,7 @@ export function renderData(ctx) {
   const { t, locale, data } = ctx;
   const cov = coverageStats(data);
 
-  const schema = [
-    ["service", t("common.source"), "Service id, matches the /{service}/ path."],
-    ["market", t("common.source"), "Market code, matches the /m/{market}/ path."],
-    ["plan", t("data.rowPlan"), "individual, family, duo, standard…"],
-    ["price", t("market.colPrice"), "Monthly price in the market's own currency."],
-    ["currency", t("data.rowCurrency"), "ISO code: TND, EGP, EUR…"],
-    ["history", t("data.rowHistory"), "Array of {date, price} — every dated point."],
-    ["verified", t("data.rowVerified"), "The date a human last read this price."],
-    ["receipt", t("data.rowReceipt"), "Where the price was read from."],
-  ];
+  const schema = t("data.schema");
 
   const body = `
   <h1>${escapeHtml(t("data.title"))}</h1>
@@ -131,8 +122,7 @@ export function renderData(ctx) {
       <thead><tr><th>${escapeHtml(t("data.colField"))}</th><th>${escapeHtml(t("data.colMeaning"))}</th></tr></thead>
       <tbody>${schema
         .map(
-          (s) =>
-            `<tr><td class="mono">${escapeHtml(s[0])}</td><td>${escapeHtml(s[1])} — ${escapeHtml(s[2])}</td></tr>`
+          (s) => `<tr><td class="mono">${escapeHtml(s[0])}</td><td>${escapeHtml(s[1])}</td></tr>`
         )
         .join("")}</tbody>
     </table></div>`

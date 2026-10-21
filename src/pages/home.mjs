@@ -1,4 +1,4 @@
-import { escapeHtml, formatPrice, formatNumber, formatDate } from "../lib/fmt.mjs";
+import { escapeHtml, formatPrice, formatNumber, formatDate, arrow } from "../lib/fmt.mjs";
 import { eci, band } from "../lib/eci.mjs";
 import { panel, verifiedBadge, num } from "../layout.mjs";
 import { barChart } from "../lib/chart.mjs";
@@ -108,11 +108,11 @@ export function renderHome(ctx) {
           return `<li>
             <span class="wl-date mono">${escapeHtml(formatDate(c.date, locale))}</span>
             <span class="wl-what"><a href="${escapeHtml(pairPath(c.service, c.market, locale))}">${escapeHtml(svc ? svc.name : c.service)}</a> · ${escapeHtml(m ? (m.nameLocal[locale] || m.name) : c.market)} · ${escapeHtml(planLabel(t, c.plan))}</span>
-            <span class="delta ${up ? "up" : "down"}">${escapeHtml(formatPrice(c.from, c.currency, locale))} → ${escapeHtml(formatPrice(c.to, c.currency, locale))}</span>
+            <span class="delta ${up ? "up" : "down"}">${escapeHtml(formatPrice(c.from, c.currency, locale))} ${arrow(locale)} ${escapeHtml(formatPrice(c.to, c.currency, locale))}</span>
           </li>`;
         })
         .join("")}</ul>
-        <p class="small"><a href="${escapeHtml(pagePath("wire", locale))}">${escapeHtml(t("common.readMore"))} →</a></p>`
+        <p class="small"><a href="${escapeHtml(pagePath("wire", locale))}">${escapeHtml(t("common.readMore"))} ${arrow(locale)}</a></p>`
     : `<div class="emptyblock">${escapeHtml(t("wire.empty"))}</div>`;
 
   const body = `
@@ -136,13 +136,13 @@ export function renderHome(ctx) {
       `<p>${escapeHtml(t("home.methodLede"))}</p>
        <p class="formula-lite"><b>ECI</b> = ${escapeHtml(t("method.formulaLede").replace(/^ECI = /, ""))}</p>
        <p class="small faint">${escapeHtml(t("method.denNote"))}</p>
-       <p><a class="btn" href="${escapeHtml(pagePath("method", locale))}">${escapeHtml(t("nav.method"))} →</a></p>`
+       <p><a class="btn" href="${escapeHtml(pagePath("method", locale))}">${escapeHtml(t("nav.method"))} ${arrow(locale)}</a></p>`
     )}
     ${panel(
       t("home.dataTitle"),
       `<p>${escapeHtml(t("home.dataLede"))}</p>
        <p class="small faint">${escapeHtml(t("method.coverageLede"))} <b>${num(cov.pct)}%</b></p>
-       <p><a class="btn" href="${escapeHtml(pagePath("data", locale))}">${escapeHtml(t("nav.data"))} →</a></p>`
+       <p><a class="btn" href="${escapeHtml(pagePath("data", locale))}">${escapeHtml(t("nav.data"))} ${arrow(locale)}</a></p>`
     )}
   </div>
   `;

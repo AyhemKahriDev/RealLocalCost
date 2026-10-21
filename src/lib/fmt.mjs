@@ -102,3 +102,8 @@ export function latinDigits(s) {
     .replace(/[٠-٩]/g, (c) => String(c.charCodeAt(0) - 0x0660))
     .replace(/[۰-۹]/g, (c) => String(c.charCodeAt(0) - 0x06f0));
 }
+
+/** Directional arrow that follows the reading direction. */
+export function arrow(locale = "en") {
+  return locale === "ar" ? "\u2190" : "\u2192";
+}

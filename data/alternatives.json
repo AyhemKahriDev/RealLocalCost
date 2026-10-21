@@ -1,6 +1,5 @@
 {
   "_comment": "Local alternatives and the practical 'how people here actually pay' notes. `price` is only filled when we have verified it against the provider's own page. `affiliate` stays null until a programme actually exists — no invented links.",
-
   "notes": {
     "tn": {
       "spotify": "No local music service operates in Tunisia at this scale, so the realistic alternatives are carrier bundles and the global services. Tunisiana and Ooredoo both sell data bundles; the Spotify app is reachable on a normal data plan without a special package.",
@@ -13,9 +12,16 @@
     "fr": {
       "spotify": "Deezer is the French alternative to Spotify and is priced in euros.",
       "netflix": "Arte and France.tv are free public services with a broad catalogue, and are the cheapest thing to watch in France by a wide margin."
+    },
+    "sa": {
+      "spotify": "The Saudi storefront uses its own plan names: \"Premium Standard\" for one account, \"Premium Platinum\" for up to three, and a student rate. The price is charged to the mobile bill.",
+      "netflix": "Shahid holds the regional streaming rights for much of the catalogue and is the service most Saudi subscribers are priced against."
+    },
+    "ma": {
+      "spotify": "The Moroccan storefront sells a prepaid year at 450 MAD, which works out at 37,50 MAD a month — cheaper than the monthly rate. A six-month introductory rate of 22,50 MAD a month applies to new subscribers.",
+      "netflix": "There is no local Netflix equivalent operating in Morocco. Netflix prices in dirhams, and the realistic comparison is against the free public-service options in Europe and the regional services further east."
     }
   },
-
   "entries": [
     {
       "market": "eg",
@@ -75,6 +81,46 @@
       "url": "https://www.deezer.com/fr",
       "price": null,
       "currency": "EUR",
+      "affiliate": null
+    },
+    {
+      "market": "sa",
+      "for": "netflix",
+      "name": "Shahid",
+      "what": "The regional streaming service, and the one Saudi prices are set against.",
+      "url": "https://shahid.mbc.net/",
+      "price": null,
+      "currency": "SAR",
+      "affiliate": null
+    },
+    {
+      "market": "sa",
+      "for": "spotify",
+      "name": "Anghami",
+      "what": "The regional music service, strong on Arabic catalogue.",
+      "url": "https://www.anghami.com/",
+      "price": null,
+      "currency": "SAR",
+      "affiliate": null
+    },
+    {
+      "market": "ma",
+      "for": "spotify",
+      "name": "Deezer",
+      "what": "Available in Morocco, and priced in dirhams.",
+      "url": "https://www.deezer.com/ma",
+      "price": null,
+      "currency": "MAD",
+      "affiliate": null
+    },
+    {
+      "market": "tn",
+      "for": "spotify",
+      "name": "Deezer",
+      "what": "Available in Tunisia, and priced in dinars.",
+      "url": "https://www.deezer.com/tn",
+      "price": null,
+      "currency": "TND",
       "affiliate": null
     }
   ]
