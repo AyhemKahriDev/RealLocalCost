@@ -1,0 +1,66 @@
+name: Deploy
+
+# One source, two homes:
+#   • Cloudflare Pages  → reallocalcost.pages.dev          (the canonical site)
+#   • GitHub Pages      → ayhemkahridev.github.io/RealLocalCost/  (the mirror)
+#
+# The two differ only in the base path, so the site is built twice with
+# --base. The canonical URL, the sitemap and the hreflang alternates
+# always point at the Cloudflare site, because that is the original.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      pages-url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build for GitHub Pages
+        run: node src/build.mjs --base=/RealLocalCost/
+
+      - name: Check the data
+        run: node tools/check.mjs
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  cloudflare:
+    needs: build
+    steps:
+      - name: Say hello
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: echo hello
+
+  github-pages:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
