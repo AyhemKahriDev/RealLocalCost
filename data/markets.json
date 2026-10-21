@@ -1,0 +1,104 @@
+{
+  "_comment": "Market registry. `wb` = World Bank ISO3 code (used by the free World Bank API). `cc` = the country's lowercase code as it appears in service URLs. `langs` lists the locales this market is served in.",
+  "markets": {
+    "tn": {
+      "name": "Tunisia",
+      "nameLocal": { "fr": "Tunisie", "ar": "تونس", "en": "Tunisia" },
+      "currency": "TND",
+      "currencyName": { "en": "Tunisian dinar", "fr": "dinar tunisien", "ar": "دينار تونسي" },
+      "symbol": "DT",
+      "wb": "TUN",
+      "cc": "tn",
+      "dir": "rtl",
+      "langs": ["ar", "fr", "en"]
+    },
+    "eg": {
+      "name": "Egypt",
+      "nameLocal": { "ar": "مصر", "fr": "Égypte", "en": "Egypt" },
+      "currency": "EGP",
+      "currencyName": { "en": "Egyptian pound", "fr": "livre égyptienne", "ar": "جنيه مصري" },
+      "symbol": "ج.م",
+      "wb": "EGY",
+      "cc": "eg",
+      "dir": "rtl",
+      "langs": ["ar", "en", "fr"]
+    },
+    "fr": {
+      "name": "France",
+      "nameLocal": { "fr": "France", "ar": "فرنسا", "en": "France" },
+      "currency": "EUR",
+      "currencyName": { "en": "euro", "fr": "euro", "ar": "أورو" },
+      "symbol": "€",
+      "wb": "FRA",
+      "cc": "fr",
+      "dir": "ltr",
+      "langs": ["fr", "en", "ar"]
+    },
+    "sa": {
+      "name": "Saudi Arabia",
+      "nameLocal": { "ar": "السعودية", "en": "Saudi Arabia", "fr": "Arabie saoudite" },
+      "currency": "SAR",
+      "currencyName": { "en": "Saudi riyal", "ar": "ريال سعودي", "fr": "riyal saoudien" },
+      "symbol": "ر.س",
+      "wb": "SAU",
+      "cc": "sa",
+      "dir": "rtl",
+      "langs": ["ar", "en"]
+    },
+    "ma": {
+      "name": "Morocco",
+      "nameLocal": { "ar": "المغرب", "fr": "Maroc", "en": "Morocco" },
+      "currency": "MAD",
+      "currencyName": { "en": "dirham", "fr": "dirham", "ar": "درهم مغربي" },
+      "symbol": "DH",
+      "wb": "MAR",
+      "cc": "ma",
+      "dir": "rtl",
+      "langs": ["ar", "fr", "en"]
+    },
+    "tr": {
+      "name": "Türkiye",
+      "nameLocal": { "tr": "Türkiye", "en": "Türkiye", "fr": "Turquie" },
+      "currency": "TRY",
+      "currencyName": { "en": "Turkish lira", "fr": "livre turque", "ar": "ليرة تركية" },
+      "symbol": "₺",
+      "wb": "TUR",
+      "cc": "tr",
+      "dir": "ltr",
+      "langs": ["en", "ar", "fr"]
+    },
+    "ar": {
+      "name": "Argentina",
+      "nameLocal": { "es": "Argentina", "en": "Argentina", "fr": "Argentine" },
+      "currency": "ARS",
+      "currencyName": { "en": "Argentine peso", "es": "peso argentino", "fr": "peso argentin" },
+      "symbol": "$",
+      "wb": "ARG",
+      "cc": "ar",
+      "dir": "ltr",
+      "langs": ["en", "fr", "es"]
+    },
+    "de": {
+      "name": "Germany",
+      "nameLocal": { "de": "Deutschland", "en": "Germany", "fr": "Allemagne" },
+      "currency": "EUR",
+      "currencyName": { "en": "euro", "de": "Euro", "fr": "euro" },
+      "symbol": "€",
+      "wb": "DEU",
+      "cc": "de",
+      "dir": "ltr",
+      "langs": ["en", "fr", "de"]
+    },
+    "us": {
+      "name": "United States",
+      "nameLocal": { "en": "United States", "fr": "États-Unis", "ar": "الولايات المتحدة" },
+      "currency": "USD",
+      "currencyName": { "en": "US dollar", "fr": "dollar américain", "ar": "دولار أمريكي" },
+      "symbol": "US$",
+      "wb": "USA",
+      "cc": "us",
+      "dir": "ltr",
+      "langs": ["en"]
+    }
+  }
+}

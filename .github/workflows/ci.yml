@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build
+        run: node src/build.mjs
+
+      - name: Check the data
+        run: node tools/check.mjs
+
+      - name: Make sure the build is reproducible
+        run: |
+          node src/build.mjs
+          git diff --stat -- site/ | tail -20 || true

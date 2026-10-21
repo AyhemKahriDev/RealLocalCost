@@ -1,0 +1,20 @@
+{
+  "name": "real-local-cost",
+  "version": "0.1.0",
+  "private": true,
+  "description": "What digital services actually cost in each country, as a share of local income. Free data, free stack, verified receipts.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node src/build.mjs",
+    "serve": "node src/build.mjs && node --run serve:site",
+    "serve:site": "python3 -m http.server 8000 --directory site",
+    "harvest": "node tools/harvest.mjs",
+    "income": "node tools/pull-income.mjs",
+    "watch": "node tools/watch.mjs",
+    "check": "node tools/check.mjs"
+  },
+  "license": "MIT"
+}

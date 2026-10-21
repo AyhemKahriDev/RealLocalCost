@@ -1,0 +1,81 @@
+{
+  "_comment": "Local alternatives and the practical 'how people here actually pay' notes. `price` is only filled when we have verified it against the provider's own page. `affiliate` stays null until a programme actually exists — no invented links.",
+
+  "notes": {
+    "tn": {
+      "spotify": "No local music service operates in Tunisia at this scale, so the realistic alternatives are carrier bundles and the global services. Tunisiana and Ooredoo both sell data bundles; the Spotify app is reachable on a normal data plan without a special package.",
+      "netflix": "Netflix bills Tunisian subscribers in US dollars, not dinars. A card account in USD is therefore required, and the dinara cost moves with the exchange rate. No local streaming service operates in Tunisia."
+    },
+    "eg": {
+      "spotify": "Spotify sells directly in Egyptian pounds and, uniquely, accepts payment through a mobile carrier: the price is charged to the mobile bill, which is how a large share of Egyptian subscribers pay.",
+      "netflix": "Netflix prices in Egyptian pounds. The local alternative is Shahid, which holds the regional rights for a large part of the catalogue and is priced for the region."
+    },
+    "fr": {
+      "spotify": "Deezer is the French alternative to Spotify and is priced in euros.",
+      "netflix": "Arte and France.tv are free public services with a broad catalogue, and are the cheapest thing to watch in France by a wide margin."
+    }
+  },
+
+  "entries": [
+    {
+      "market": "eg",
+      "for": "netflix",
+      "name": "Shahid",
+      "what": "The regional streaming service that holds much of the catalogue Netflix carries in the Middle East.",
+      "url": "https://shahid.mbc.net/",
+      "price": null,
+      "currency": "EGP",
+      "affiliate": null
+    },
+    {
+      "market": "eg",
+      "for": "netflix",
+      "name": "Watch it",
+      "what": "Egyptian streaming service with local series and sport.",
+      "url": "https://watchit.com/",
+      "price": null,
+      "currency": "EGP",
+      "affiliate": null
+    },
+    {
+      "market": "eg",
+      "for": "spotify",
+      "name": "Anghami",
+      "what": "The regional music service, strong on Arabic catalogue.",
+      "url": "https://www.anghami.com/",
+      "price": null,
+      "currency": "EGP",
+      "affiliate": null
+    },
+    {
+      "market": "fr",
+      "for": "netflix",
+      "name": "Arte",
+      "what": "Free public-service channel. No subscription, no ads, no card.",
+      "url": "https://www.arte.tv/",
+      "price": 0,
+      "currency": "EUR",
+      "affiliate": null
+    },
+    {
+      "market": "fr",
+      "for": "netflix",
+      "name": "France.tv",
+      "what": "Free public-service streaming platform run by the French state.",
+      "url": "https://www.france.tv/",
+      "price": 0,
+      "currency": "EUR",
+      "affiliate": null
+    },
+    {
+      "market": "fr",
+      "for": "spotify",
+      "name": "Deezer",
+      "what": "The French music service. Same catalogue shape, different price.",
+      "url": "https://www.deezer.com/fr",
+      "price": null,
+      "currency": "EUR",
+      "affiliate": null
+    }
+  ]
+}

@@ -1,0 +1,297 @@
+{
+  "_comment": "Service registry. `pricingUrl` is a template: {cc} = market country code, {lang} = market language. `plans` are canonical ids; labels live in src/i18n/*.json under `plan.<id>`. `source` tells the harvester which free channel to use: 'live' = fetch the page directly, 'wayback' = read the archived snapshot index, 'both' = live now plus archived history.",
+  "services": {
+    "spotify": {
+      "name": "Spotify",
+      "category": "Music",
+      "homepage": "https://www.spotify.com/",
+      "pricingUrl": "https://www.spotify.com/{cc}/premium/",
+      "archive": {
+        "prefix": "www.spotify.com/{cc}",
+        "path": "/premium",
+        "exclude": []
+      },
+      "source": "both",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "individual",
+          "flagship": true
+        },
+        {
+          "id": "duo"
+        },
+        {
+          "id": "platinum"
+        },
+        {
+          "id": "family"
+        },
+        {
+          "id": "student"
+        }
+      ],
+      "note": "Ships per-country pricing pages with server-rendered prices. Arabic-Indic numerals on the EG page — the extractor normalises them."
+    },
+    "netflix": {
+      "name": "Netflix",
+      "category": "Streaming",
+      "homepage": "https://www.netflix.com/",
+      "pricingUrl": "https://www.netflix.com/{cc}/",
+      "archive": {
+        "prefix": "www.netflix.com/{cc}",
+        "path": "",
+        "exclude": [
+          "/title/",
+          "/browse/",
+          "/watch/",
+          "/gift/"
+        ]
+      },
+      "source": "both",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "tr",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "withads"
+        },
+        {
+          "id": "standard",
+          "flagship": true
+        },
+        {
+          "id": "premium"
+        }
+      ],
+      "note": "Netflix geo-redirects to the requester's country, so a fetch from outside the market may return the wrong market. The receipt records the final URL that answered, and prices are labelled with the currency actually shown. In TN the page quotes US dollars — a finding in itself."
+    },
+    "apple-tv": {
+      "name": "Apple TV+",
+      "category": "Streaming",
+      "homepage": "https://tv.apple.com/",
+      "pricingUrl": "https://www.apple.com/{cc}/apple-tv-plus/",
+      "archive": {
+        "prefix": "www.apple.com/{cc}",
+        "path": "/apple-tv",
+        "exclude": []
+      },
+      "source": "both",
+      "markets": [
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "standard",
+          "flagship": true
+        }
+      ],
+      "note": "Apple ships a per-country store page. In some markets Apple TV+ is not sold standalone: in Egypt it is included in every iCloud+ plan, so the price quoted is the iCloud+ entry tier."
+    },
+    "disney": {
+      "name": "Disney+",
+      "category": "Streaming",
+      "homepage": "https://www.disneyplus.com/",
+      "pricingUrl": "https://www.disneyplus.com/{cc}/",
+      "archive": {
+        "prefix": "www.disneyplus.com/{cc}",
+        "path": "",
+        "exclude": [
+          "/movies/",
+          "/series/",
+          "/browse/"
+        ]
+      },
+      "source": "wayback",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "basic"
+        },
+        {
+          "id": "standard",
+          "flagship": true
+        },
+        {
+          "id": "premium"
+        }
+      ],
+      "note": "Redirects to the global storefront from most origins; archived snapshots are the reliable channel."
+    },
+    "youtube-premium": {
+      "name": "YouTube Premium",
+      "category": "Streaming",
+      "homepage": "https://www.youtube.com/premium",
+      "pricingUrl": "https://www.youtube.com/premium?gl={ccUpper}",
+      "archive": {
+        "prefix": "www.youtube.com/premium",
+        "path": "",
+        "exclude": []
+      },
+      "source": "wayback",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "individual",
+          "flagship": true
+        },
+        {
+          "id": "family"
+        }
+      ],
+      "note": "Prices are rendered client-side and vary by gl and by channel, so extraction is noisy. Human-confirmed only."
+    },
+    "chatgpt": {
+      "name": "ChatGPT Plus",
+      "category": "AI",
+      "homepage": "https://openai.com/chatgpt/",
+      "pricingUrl": "https://openai.com/chatgpt/pricing/",
+      "archive": {
+        "prefix": "openai.com/chatgpt",
+        "path": "/pricing",
+        "exclude": []
+      },
+      "source": "wayback",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "plus",
+          "flagship": true
+        }
+      ],
+      "note": "openai.com returns 403 to bots; archived snapshots are the channel."
+    },
+    "deezer": {
+      "name": "Deezer",
+      "category": "Music",
+      "homepage": "https://www.deezer.com/",
+      "pricingUrl": "https://www.deezer.com/{cc}",
+      "archive": {
+        "prefix": "www.deezer.com/{cc}",
+        "path": "",
+        "exclude": []
+      },
+      "source": "both",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "ma",
+        "de"
+      ],
+      "plans": [
+        {
+          "id": "individual",
+          "flagship": true
+        },
+        {
+          "id": "family"
+        }
+      ],
+      "note": "Deezer is a France-based local alternative to Spotify in several markets."
+    },
+    "dropbox": {
+      "name": "Dropbox",
+      "category": "Storage",
+      "homepage": "https://www.dropbox.com/",
+      "pricingUrl": "https://www.dropbox.com/{cc}/plans",
+      "archive": {
+        "prefix": "www.dropbox.com/{cc}",
+        "path": "/plans",
+        "exclude": []
+      },
+      "source": "wayback",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "standard",
+          "flagship": true
+        },
+        {
+          "id": "family"
+        }
+      ],
+      "note": "Shipped per-country price lists; archived snapshots read cleanly."
+    },
+    "adobe": {
+      "name": "Adobe Creative Cloud",
+      "category": "Software",
+      "homepage": "https://www.adobe.com/creativecloud.html",
+      "pricingUrl": "https://www.adobe.com/{cc}/creativecloud/plans.html",
+      "archive": {
+        "prefix": "www.adobe.com/{cc}",
+        "path": "/creativecloud",
+        "exclude": []
+      },
+      "source": "wayback",
+      "markets": [
+        "tn",
+        "eg",
+        "fr",
+        "sa",
+        "ma",
+        "de",
+        "us"
+      ],
+      "plans": [
+        {
+          "id": "allapps",
+          "flagship": true
+        }
+      ],
+      "note": "adobe.com blocks datacenter IPs; archived snapshots only."
+    }
+  }
+}

@@ -1,0 +1,432 @@
+{
+  "_comment": "The verified price database. Every row carries a date and a receipt. Prices are read by a human from the service's own page; the machine only proposes (see tools/harvest.mjs). History points are dated snapshots of the same page. Do not add a row without a `verified` date and a `receipt`.",
+  "updatedAt": "2026-10-21",
+  "rows": [
+    {
+      "service": "spotify",
+      "market": "fr",
+      "plan": "individual",
+      "price": 12.14,
+      "currency": "EUR",
+      "history": [
+        {
+          "date": "2023-12-03",
+          "price": 10.99
+        },
+        {
+          "date": "2024-04-18",
+          "price": 10.99
+        },
+        {
+          "date": "2025-04-29",
+          "price": 11.12
+        },
+        {
+          "date": "2025-12-28",
+          "price": 12.14
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/fr/premium/",
+        "kind": "live",
+        "archived": "https://web.archive.org/web/20251228000000/https://www.spotify.com/fr/premium/",
+        "archivedDate": "2025-12-28"
+      },
+      "note": "Price shown in the French storefront, tax included."
+    },
+    {
+      "service": "spotify",
+      "market": "fr",
+      "plan": "student",
+      "price": 7.07,
+      "currency": "EUR",
+      "history": [
+        {
+          "date": "2023-12-03",
+          "price": 5.99
+        },
+        {
+          "date": "2024-04-18",
+          "price": 5.99
+        },
+        {
+          "date": "2025-04-29",
+          "price": 6.06
+        },
+        {
+          "date": "2025-12-28",
+          "price": 7.07
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/fr/premium/",
+        "kind": "live",
+        "archived": "https://web.archive.org/web/20251228000000/https://www.spotify.com/fr/premium/",
+        "archivedDate": "2025-12-28"
+      },
+      "note": "Student plan, requires an eligible higher-education account."
+    },
+    {
+      "service": "spotify",
+      "market": "fr",
+      "plan": "duo",
+      "price": 17.2,
+      "currency": "EUR",
+      "history": [
+        {
+          "date": "2023-12-03",
+          "price": 14.99
+        },
+        {
+          "date": "2024-04-18",
+          "price": 14.99
+        },
+        {
+          "date": "2025-04-29",
+          "price": 15.17
+        },
+        {
+          "date": "2025-12-28",
+          "price": 17.2
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/fr/premium/",
+        "kind": "live",
+        "archived": "https://web.archive.org/web/20251228000000/https://www.spotify.com/fr/premium/",
+        "archivedDate": "2025-12-28"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "fr",
+      "plan": "family",
+      "price": 21.24,
+      "currency": "EUR",
+      "history": [
+        {
+          "date": "2023-12-03",
+          "price": 17.99
+        },
+        {
+          "date": "2024-04-18",
+          "price": 17.99
+        },
+        {
+          "date": "2025-04-29",
+          "price": 18.21
+        },
+        {
+          "date": "2025-12-28",
+          "price": 21.24
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/fr/premium/",
+        "kind": "live",
+        "archived": "https://web.archive.org/web/20251228000000/https://www.spotify.com/fr/premium/",
+        "archivedDate": "2025-12-28"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "eg",
+      "plan": "individual",
+      "price": 79,
+      "currency": "EGP",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 79
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/eg/premium/",
+        "kind": "live"
+      },
+      "note": "Introductory rate of 39 EGP/month for six months applies to new subscribers; the standing price is 79 EGP/month. Payable by card or through a mobile carrier."
+    },
+    {
+      "service": "spotify",
+      "market": "eg",
+      "plan": "student",
+      "price": 39,
+      "currency": "EGP",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 39
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/eg/premium/",
+        "kind": "live"
+      },
+      "note": "Student plan, one account, discounted rate."
+    },
+    {
+      "service": "spotify",
+      "market": "eg",
+      "plan": "duo",
+      "price": 109,
+      "currency": "EGP",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 109
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/eg/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "eg",
+      "plan": "family",
+      "price": 139,
+      "currency": "EGP",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 139
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/eg/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "tn",
+      "plan": "individual",
+      "price": 12.5,
+      "currency": "TND",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 12.5
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/tn/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "tn",
+      "plan": "duo",
+      "price": 16.5,
+      "currency": "TND",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 16.5
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/tn/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "tn",
+      "plan": "family",
+      "price": 19.9,
+      "currency": "TND",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 19.9
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/tn/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "ma",
+      "plan": "individual",
+      "price": 45,
+      "currency": "MAD",
+      "note": "Introductory rate of 22,50 MAD/month for six months applies to new subscribers; the standing price is 45 MAD/month. A prepaid year is 450 MAD, i.e. 37,50 MAD/month.",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 45
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/ma/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "ma",
+      "plan": "duo",
+      "price": 60,
+      "currency": "MAD",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 60
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/ma/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "ma",
+      "plan": "family",
+      "price": 75,
+      "currency": "MAD",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 75
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/ma/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "ma",
+      "plan": "student",
+      "price": 23,
+      "currency": "MAD",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 23
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/ma/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "sa",
+      "plan": "individual",
+      "price": 23.99,
+      "currency": "SAR",
+      "note": "Sold as \"Premium Standard\". Introductory rate of 11,99 SAR/month for six months; the standing price is 23,99 SAR/month. Payable through a mobile carrier bill.",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 23.99
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/sa/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "sa",
+      "plan": "platinum",
+      "price": 59.99,
+      "currency": "SAR",
+      "note": "Sold as \"Premium Platinum\": one account, up to three people. Saudi Arabia does not use the Duo or Family tier names.",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 59.99
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/sa/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "spotify",
+      "market": "sa",
+      "plan": "student",
+      "price": 12.99,
+      "currency": "SAR",
+      "note": "Sold as \"Premium للطلاب\": one account, discounted rate.",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 12.99
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.spotify.com/sa/premium/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "apple-tv",
+      "market": "fr",
+      "plan": "standard",
+      "price": 9.99,
+      "currency": "EUR",
+      "note": "9,99 €/month after the seven-day trial. Included in Apple One from 19,95 €/month.",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 9.99
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.apple.com/fr/apple-tv-plus/",
+        "kind": "live"
+      }
+    },
+    {
+      "service": "apple-tv",
+      "market": "eg",
+      "plan": "standard",
+      "price": 49.99,
+      "currency": "EGP",
+      "note": "Apple TV+ is not sold standalone in Egypt. It is included in every iCloud+ plan at no extra cost, so the price quoted is the iCloud+ entry tier starting at EGP 49.99/month.",
+      "history": [
+        {
+          "date": "2026-10-21",
+          "price": 49.99
+        }
+      ],
+      "verified": "2026-10-21",
+      "receipt": {
+        "url": "https://www.apple.com/eg/apple-tv-plus/",
+        "kind": "live"
+      }
+    }
+  ]
+}
