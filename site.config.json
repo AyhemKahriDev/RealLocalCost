@@ -1,6 +1,5 @@
 {
-  "_comment": "Site identity. The brand does not translate — only the tagline and the copy do. One place to change the name, the canonical URL and the repository.",
-
+  "_comment": "Site identity. The brand does not translate — only the tagline and the copy do. One place to change the name, the canonical URL and the repository. `url` is the canonical home: it must be the copy that is actually current. `fallbackUrl` is the other home.",
   "name": "Real Local Cost",
   "wordmark": "Real Local Cost",
   "tagline": {
@@ -13,12 +12,12 @@
     "fr": "Netflix, Spotify et Apple TV+ tarifés dans la devise de chaque marché, puis divisés par ce que les gens y gagnent — pour que le chiffre signifie la même chose partout.",
     "ar": "نتفليكس وسبوتيفاي وآبل تي في ب 것으로 تسعّر في عملة كل سوق، ثم تُقسَم على ما يكسبه الناس هناك — ليصبح الرقم يعني الشيء نفسه في كل مكان."
   },
-  "url": "https://reallocalcost.pages.dev",
-  "fallbackUrl": "https://ayhemkahridev.github.io/RealLocalCost/",
+  "url": "https://ayhemkahridev.github.io/RealLocalCost/",
+  "fallbackUrl": "https://reallocalcost.pages.dev/",
   "repo": "https://github.com/AyhemKahriDev/RealLocalCost",
-
   "data": {
     "license": "CC0",
     "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
-  }
+  },
+  "canonicalNote": "The Cloudflare copy (reallocalcost.pages.dev) is the nicer domain, but it only updates once a Cloudflare API token is added as the repo secret CF_WRANGLER_CONFIG... actually CF_CLOUDFLARE_API_TOKEN. Until then the GitHub Pages copy is the one that is current, so it is the canonical."
 }
