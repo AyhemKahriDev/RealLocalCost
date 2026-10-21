@@ -1,104 +1,1255 @@
 {
-  "_comment": "Market registry. `wb` = World Bank ISO3 code (used by the free World Bank API). `cc` = the country's lowercase code as it appears in service URLs. `langs` lists the locales this market is served in.",
+  "_comment": "Market registry. `wb` = World Bank ISO3 code (free API). `symbol` = the symbol the market's own price pages actually use — the market wins when symbols collide. `aliases` lets a market claim a shared symbol (Argentina writes $ for pesos).",
   "markets": {
     "tn": {
       "name": "Tunisia",
-      "nameLocal": { "fr": "Tunisie", "ar": "تونس", "en": "Tunisia" },
+      "nameLocal": {
+        "en": "Tunisia",
+        "fr": "Tunisie",
+        "ar": "تونس"
+      },
       "currency": "TND",
-      "currencyName": { "en": "Tunisian dinar", "fr": "dinar tunisien", "ar": "دينار تونسي" },
       "symbol": "DT",
       "wb": "TUN",
       "cc": "tn",
       "dir": "rtl",
-      "langs": ["ar", "fr", "en"]
+      "langs": [
+        "ar",
+        "fr",
+        "en"
+      ],
+      "tld": "com.tn"
     },
     "eg": {
       "name": "Egypt",
-      "nameLocal": { "ar": "مصر", "fr": "Égypte", "en": "Egypt" },
+      "nameLocal": {
+        "en": "Egypt",
+        "fr": "Égypte",
+        "ar": "مصر"
+      },
       "currency": "EGP",
-      "currencyName": { "en": "Egyptian pound", "fr": "livre égyptienne", "ar": "جنيه مصري" },
       "symbol": "ج.م",
       "wb": "EGY",
       "cc": "eg",
       "dir": "rtl",
-      "langs": ["ar", "en", "fr"]
-    },
-    "fr": {
-      "name": "France",
-      "nameLocal": { "fr": "France", "ar": "فرنسا", "en": "France" },
-      "currency": "EUR",
-      "currencyName": { "en": "euro", "fr": "euro", "ar": "أورو" },
-      "symbol": "€",
-      "wb": "FRA",
-      "cc": "fr",
-      "dir": "ltr",
-      "langs": ["fr", "en", "ar"]
+      "langs": [
+        "ar",
+        "en",
+        "fr"
+      ],
+      "tld": "com.eg"
     },
     "sa": {
       "name": "Saudi Arabia",
-      "nameLocal": { "ar": "السعودية", "en": "Saudi Arabia", "fr": "Arabie saoudite" },
+      "nameLocal": {
+        "en": "Saudi Arabia",
+        "fr": "Arabie saoudite",
+        "ar": "السعودية"
+      },
       "currency": "SAR",
-      "currencyName": { "en": "Saudi riyal", "ar": "ريال سعودي", "fr": "riyal saoudien" },
       "symbol": "ر.س",
       "wb": "SAU",
       "cc": "sa",
       "dir": "rtl",
-      "langs": ["ar", "en"]
+      "langs": [
+        "ar",
+        "en"
+      ],
+      "tld": "com.sa"
     },
     "ma": {
       "name": "Morocco",
-      "nameLocal": { "ar": "المغرب", "fr": "Maroc", "en": "Morocco" },
+      "nameLocal": {
+        "en": "Morocco",
+        "fr": "Maroc",
+        "ar": "المغرب"
+      },
       "currency": "MAD",
-      "currencyName": { "en": "dirham", "fr": "dirham", "ar": "درهم مغربي" },
       "symbol": "DH",
       "wb": "MAR",
       "cc": "ma",
       "dir": "rtl",
-      "langs": ["ar", "fr", "en"]
+      "langs": [
+        "ar",
+        "fr",
+        "en"
+      ],
+      "tld": "ma"
     },
-    "tr": {
-      "name": "Türkiye",
-      "nameLocal": { "tr": "Türkiye", "en": "Türkiye", "fr": "Turquie" },
-      "currency": "TRY",
-      "currencyName": { "en": "Turkish lira", "fr": "livre turque", "ar": "ليرة تركية" },
-      "symbol": "₺",
-      "wb": "TUR",
-      "cc": "tr",
-      "dir": "ltr",
-      "langs": ["en", "ar", "fr"]
+    "dz": {
+      "name": "Algeria",
+      "nameLocal": {
+        "en": "Algeria",
+        "fr": "Algérie",
+        "ar": "الجزائر"
+      },
+      "currency": "DZD",
+      "symbol": "د.ج",
+      "wb": "DZA",
+      "cc": "dz",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "fr",
+        "en"
+      ],
+      "tld": "dz"
     },
-    "ar": {
-      "name": "Argentina",
-      "nameLocal": { "es": "Argentina", "en": "Argentina", "fr": "Argentine" },
-      "currency": "ARS",
-      "currencyName": { "en": "Argentine peso", "es": "peso argentino", "fr": "peso argentin" },
-      "symbol": "$",
-      "wb": "ARG",
-      "cc": "ar",
+    "jo": {
+      "name": "Jordan",
+      "nameLocal": {
+        "en": "Jordan",
+        "fr": "Jordanie",
+        "ar": "الأردن"
+      },
+      "currency": "JOD",
+      "symbol": "د.ا",
+      "wb": "JOR",
+      "cc": "jo",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "en",
+        "fr"
+      ],
+      "tld": "com.jo"
+    },
+    "iq": {
+      "name": "Iraq",
+      "nameLocal": {
+        "en": "Iraq",
+        "fr": "Irak",
+        "ar": "العراق"
+      },
+      "currency": "IQD",
+      "symbol": "ع.د",
+      "wb": "IRQ",
+      "cc": "iq",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "en",
+        "ku"
+      ],
+      "tld": "com.iq"
+    },
+    "ae": {
+      "name": "United Arab Emirates",
+      "nameLocal": {
+        "en": "United Arab Emirates",
+        "fr": "Émirats arabes unis",
+        "ar": "الإمارات"
+      },
+      "currency": "AED",
+      "symbol": "د.إ",
+      "wb": "ARE",
+      "cc": "ae",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "en",
+        "fr"
+      ],
+      "tld": "ae"
+    },
+    "qa": {
+      "name": "Qatar",
+      "nameLocal": {
+        "en": "Qatar",
+        "fr": "Qatar",
+        "ar": "قطر"
+      },
+      "currency": "QAR",
+      "symbol": "ر.ق",
+      "wb": "QAT",
+      "cc": "qa",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "en"
+      ],
+      "tld": "com.qa"
+    },
+    "kw": {
+      "name": "Kuwait",
+      "nameLocal": {
+        "en": "Kuwait",
+        "fr": "Koweït",
+        "ar": "الكويت"
+      },
+      "currency": "KWD",
+      "symbol": "د.ك",
+      "wb": "KWT",
+      "cc": "kw",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "en"
+      ],
+      "tld": "com.kw"
+    },
+    "om": {
+      "name": "Oman",
+      "nameLocal": {
+        "en": "Oman",
+        "fr": "Oman",
+        "ar": "عُمان"
+      },
+      "currency": "OMR",
+      "symbol": "ر.ع",
+      "wb": "OMN",
+      "cc": "om",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "en"
+      ],
+      "tld": "com.om"
+    },
+    "bh": {
+      "name": "Bahrain",
+      "nameLocal": {
+        "en": "Bahrain",
+        "fr": "Bahreïn",
+        "ar": "البحرين"
+      },
+      "currency": "BHD",
+      "symbol": "د.ب",
+      "wb": "BHR",
+      "cc": "bh",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "en"
+      ],
+      "tld": "com.bh"
+    },
+    "lb": {
+      "name": "Lebanon",
+      "nameLocal": {
+        "en": "Lebanon",
+        "fr": "Liban",
+        "ar": "لبنان"
+      },
+      "currency": "LBP",
+      "symbol": "ل.ل",
+      "wb": "LBN",
+      "cc": "lb",
+      "dir": "rtl",
+      "langs": [
+        "ar",
+        "fr",
+        "en"
+      ],
+      "tld": "com.lb"
+    },
+    "fr": {
+      "name": "France",
+      "nameLocal": {
+        "en": "France",
+        "fr": "France",
+        "ar": "فرنسا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "FRA",
+      "cc": "fr",
       "dir": "ltr",
-      "langs": ["en", "fr", "es"]
+      "langs": [
+        "fr",
+        "en",
+        "ar"
+      ],
+      "tld": "fr"
     },
     "de": {
       "name": "Germany",
-      "nameLocal": { "de": "Deutschland", "en": "Germany", "fr": "Allemagne" },
+      "nameLocal": {
+        "en": "Germany",
+        "fr": "Allemagne",
+        "ar": "ألمانيا"
+      },
       "currency": "EUR",
-      "currencyName": { "en": "euro", "de": "Euro", "fr": "euro" },
       "symbol": "€",
       "wb": "DEU",
       "cc": "de",
       "dir": "ltr",
-      "langs": ["en", "fr", "de"]
+      "langs": [
+        "de",
+        "en",
+        "fr"
+      ],
+      "tld": "de"
+    },
+    "gb": {
+      "name": "United Kingdom",
+      "nameLocal": {
+        "en": "United Kingdom",
+        "fr": "Royaume-Uni",
+        "ar": "المملكة المتحدة"
+      },
+      "currency": "GBP",
+      "symbol": "£",
+      "wb": "GBR",
+      "cc": "gb",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "fr",
+        "ar"
+      ],
+      "tld": "co.uk"
+    },
+    "es": {
+      "name": "Spain",
+      "nameLocal": {
+        "en": "Spain",
+        "fr": "Espagne",
+        "ar": "إسبانيا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "ESP",
+      "cc": "es",
+      "dir": "ltr",
+      "langs": [
+        "es",
+        "en",
+        "fr"
+      ],
+      "tld": "es"
+    },
+    "it": {
+      "name": "Italy",
+      "nameLocal": {
+        "en": "Italy",
+        "fr": "Italie",
+        "ar": "إيطاليا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "ITA",
+      "cc": "it",
+      "dir": "ltr",
+      "langs": [
+        "it",
+        "en",
+        "fr"
+      ],
+      "tld": "it"
+    },
+    "nl": {
+      "name": "Netherlands",
+      "nameLocal": {
+        "en": "Netherlands",
+        "fr": "Pays-Bas",
+        "ar": "هولندا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "NLD",
+      "cc": "nl",
+      "dir": "ltr",
+      "langs": [
+        "nl",
+        "en",
+        "fr"
+      ],
+      "tld": "nl"
+    },
+    "be": {
+      "name": "Belgium",
+      "nameLocal": {
+        "en": "Belgium",
+        "fr": "Belgique",
+        "ar": "بلجيكا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "BEL",
+      "cc": "be",
+      "dir": "ltr",
+      "langs": [
+        "nl",
+        "fr",
+        "en"
+      ],
+      "tld": "be"
+    },
+    "at": {
+      "name": "Austria",
+      "nameLocal": {
+        "en": "Austria",
+        "fr": "Autriche",
+        "ar": "النمسا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "AUT",
+      "cc": "at",
+      "dir": "ltr",
+      "langs": [
+        "de",
+        "en",
+        "fr"
+      ],
+      "tld": "at"
+    },
+    "ie": {
+      "name": "Ireland",
+      "nameLocal": {
+        "en": "Ireland",
+        "fr": "Irlande",
+        "ar": "أيرلندا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "IRL",
+      "cc": "ie",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "fr",
+        "ga"
+      ],
+      "tld": "ie"
+    },
+    "pt": {
+      "name": "Portugal",
+      "nameLocal": {
+        "en": "Portugal",
+        "fr": "Portugal",
+        "ar": "البرتغال"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "PRT",
+      "cc": "pt",
+      "dir": "ltr",
+      "langs": [
+        "pt",
+        "en",
+        "fr"
+      ],
+      "tld": "pt"
+    },
+    "fi": {
+      "name": "Finland",
+      "nameLocal": {
+        "en": "Finland",
+        "fr": "Finlande",
+        "ar": "فنلندا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "FIN",
+      "cc": "fi",
+      "dir": "ltr",
+      "langs": [
+        "fi",
+        "en",
+        "sv"
+      ],
+      "tld": "fi"
+    },
+    "gr": {
+      "name": "Greece",
+      "nameLocal": {
+        "en": "Greece",
+        "fr": "Grèce",
+        "ar": "اليونان"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "GRC",
+      "cc": "gr",
+      "dir": "ltr",
+      "langs": [
+        "el",
+        "en",
+        "fr"
+      ],
+      "tld": "gr"
+    },
+    "lu": {
+      "name": "Luxembourg",
+      "nameLocal": {
+        "en": "Luxembourg",
+        "fr": "Luxembourg",
+        "ar": "لوكسمبورغ"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "LUX",
+      "cc": "lu",
+      "dir": "ltr",
+      "langs": [
+        "fr",
+        "de",
+        "en"
+      ],
+      "tld": "lu"
+    },
+    "mt": {
+      "name": "Malta",
+      "nameLocal": {
+        "en": "Malta",
+        "fr": "Malte",
+        "ar": "مالطا"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "MLT",
+      "cc": "mt",
+      "dir": "ltr",
+      "langs": [
+        "mt",
+        "en",
+        "it"
+      ],
+      "tld": "com.mt"
+    },
+    "cy": {
+      "name": "Cyprus",
+      "nameLocal": {
+        "en": "Cyprus",
+        "fr": "Chypre",
+        "ar": "قبرص"
+      },
+      "currency": "EUR",
+      "symbol": "€",
+      "wb": "CYP",
+      "cc": "cy",
+      "dir": "ltr",
+      "langs": [
+        "el",
+        "en",
+        "tr"
+      ],
+      "tld": "com.cy"
+    },
+    "se": {
+      "name": "Sweden",
+      "nameLocal": {
+        "en": "Sweden",
+        "fr": "Suède",
+        "ar": "السويد"
+      },
+      "currency": "SEK",
+      "symbol": "kr",
+      "wb": "SWE",
+      "cc": "se",
+      "dir": "ltr",
+      "langs": [
+        "sv",
+        "en",
+        "ar"
+      ],
+      "tld": "se"
+    },
+    "no": {
+      "name": "Norway",
+      "nameLocal": {
+        "en": "Norway",
+        "fr": "Norvège",
+        "ar": "النرويج"
+      },
+      "currency": "NOK",
+      "symbol": "kr",
+      "wb": "NOR",
+      "cc": "no",
+      "dir": "ltr",
+      "langs": [
+        "nb",
+        "en",
+        "ar"
+      ],
+      "tld": "no"
+    },
+    "dk": {
+      "name": "Denmark",
+      "nameLocal": {
+        "en": "Denmark",
+        "fr": "Danemark",
+        "ar": "الدنمارك"
+      },
+      "currency": "DKK",
+      "symbol": "kr",
+      "wb": "DNK",
+      "cc": "dk",
+      "dir": "ltr",
+      "langs": [
+        "da",
+        "en",
+        "ar"
+      ],
+      "tld": "dk"
+    },
+    "pl": {
+      "name": "Poland",
+      "nameLocal": {
+        "en": "Poland",
+        "fr": "Pologne",
+        "ar": "بولندا"
+      },
+      "currency": "PLN",
+      "symbol": "zł",
+      "wb": "POL",
+      "cc": "pl",
+      "dir": "ltr",
+      "langs": [
+        "pl",
+        "en",
+        "ar"
+      ],
+      "tld": "pl"
+    },
+    "cz": {
+      "name": "Czechia",
+      "nameLocal": {
+        "en": "Czechia",
+        "fr": "Tchéquie",
+        "ar": "التشيك"
+      },
+      "currency": "CZK",
+      "symbol": "Kč",
+      "wb": "CZE",
+      "cc": "cz",
+      "dir": "ltr",
+      "langs": [
+        "cs",
+        "en",
+        "ar"
+      ],
+      "tld": "cz"
+    },
+    "ch": {
+      "name": "Switzerland",
+      "nameLocal": {
+        "en": "Switzerland",
+        "fr": "Suisse",
+        "ar": "سويسرا"
+      },
+      "currency": "CHF",
+      "symbol": "CHF",
+      "wb": "CHE",
+      "cc": "ch",
+      "dir": "ltr",
+      "langs": [
+        "de",
+        "fr",
+        "en"
+      ],
+      "tld": "ch"
+    },
+    "hu": {
+      "name": "Hungary",
+      "nameLocal": {
+        "en": "Hungary",
+        "fr": "Hongrie",
+        "ar": "المجر"
+      },
+      "currency": "HUF",
+      "symbol": "Ft",
+      "wb": "HUN",
+      "cc": "hu",
+      "dir": "ltr",
+      "langs": [
+        "hu",
+        "en",
+        "ar"
+      ],
+      "tld": "hu"
+    },
+    "ro": {
+      "name": "Romania",
+      "nameLocal": {
+        "en": "Romania",
+        "fr": "Roumanie",
+        "ar": "رومانيا"
+      },
+      "currency": "RON",
+      "symbol": "lei",
+      "wb": "ROU",
+      "cc": "ro",
+      "dir": "ltr",
+      "langs": [
+        "ro",
+        "en",
+        "ar"
+      ],
+      "tld": "ro"
+    },
+    "tr": {
+      "name": "Türkiye",
+      "nameLocal": {
+        "en": "Türkiye",
+        "fr": "Turquie",
+        "ar": "تركيا"
+      },
+      "currency": "TRY",
+      "symbol": "₺",
+      "wb": "TUR",
+      "cc": "tr",
+      "dir": "ltr",
+      "langs": [
+        "tr",
+        "en",
+        "ar"
+      ],
+      "tld": "com.tr"
+    },
+    "ua": {
+      "name": "Ukraine",
+      "nameLocal": {
+        "en": "Ukraine",
+        "fr": "Ukraine",
+        "ar": "أوكرانيا"
+      },
+      "currency": "UAH",
+      "symbol": "₴",
+      "wb": "UKR",
+      "cc": "ua",
+      "dir": "ltr",
+      "langs": [
+        "uk",
+        "en",
+        "ar"
+      ],
+      "tld": "com.ua"
+    },
+    "il": {
+      "name": "Israel",
+      "nameLocal": {
+        "en": "Israel",
+        "fr": "Israël",
+        "ar": "إسرائيل"
+      },
+      "currency": "ILS",
+      "symbol": "₪",
+      "wb": "ISR",
+      "cc": "il",
+      "dir": "ltr",
+      "langs": [
+        "he",
+        "ar",
+        "en"
+      ],
+      "tld": "co.il"
+    },
+    "ar": {
+      "name": "Argentina",
+      "nameLocal": {
+        "en": "Argentina",
+        "fr": "Argentine",
+        "ar": "الأرجنتين"
+      },
+      "currency": "ARS",
+      "symbol": "$",
+      "wb": "ARG",
+      "cc": "ar",
+      "dir": "ltr",
+      "langs": [
+        "es",
+        "en",
+        "fr"
+      ],
+      "aliases": {
+        "$": "ARS"
+      },
+      "tld": "com.ar"
+    },
+    "cl": {
+      "name": "Chile",
+      "nameLocal": {
+        "en": "Chile",
+        "fr": "Chili",
+        "ar": "تشيلي"
+      },
+      "currency": "CLP",
+      "symbol": "CLP$",
+      "wb": "CHL",
+      "cc": "cl",
+      "dir": "ltr",
+      "langs": [
+        "es",
+        "en",
+        "ar"
+      ],
+      "tld": "cl"
+    },
+    "co": {
+      "name": "Colombia",
+      "nameLocal": {
+        "en": "Colombia",
+        "fr": "Colombie",
+        "ar": "كولومبيا"
+      },
+      "currency": "COP",
+      "symbol": "COL$",
+      "wb": "COL",
+      "cc": "co",
+      "dir": "ltr",
+      "langs": [
+        "es",
+        "en",
+        "ar"
+      ],
+      "tld": "com.co"
+    },
+    "pe": {
+      "name": "Peru",
+      "nameLocal": {
+        "en": "Peru",
+        "fr": "Pérou",
+        "ar": "بيرو"
+      },
+      "currency": "PEN",
+      "symbol": "S/",
+      "wb": "PER",
+      "cc": "pe",
+      "dir": "ltr",
+      "langs": [
+        "es",
+        "en",
+        "ar"
+      ],
+      "tld": "com.pe"
+    },
+    "br": {
+      "name": "Brazil",
+      "nameLocal": {
+        "en": "Brazil",
+        "fr": "Brésil",
+        "ar": "البرازيل"
+      },
+      "currency": "BRL",
+      "symbol": "R$",
+      "wb": "BRA",
+      "cc": "br",
+      "dir": "ltr",
+      "langs": [
+        "pt",
+        "en",
+        "es"
+      ],
+      "tld": "com.br"
+    },
+    "mx": {
+      "name": "Mexico",
+      "nameLocal": {
+        "en": "Mexico",
+        "fr": "Mexique",
+        "ar": "المكسيك"
+      },
+      "currency": "MXN",
+      "symbol": "MX$",
+      "wb": "MEX",
+      "cc": "mx",
+      "dir": "ltr",
+      "langs": [
+        "es",
+        "en",
+        "ar"
+      ],
+      "tld": "com.mx"
+    },
+    "ke": {
+      "name": "Kenya",
+      "nameLocal": {
+        "en": "Kenya",
+        "fr": "Kenya",
+        "ar": "كينيا"
+      },
+      "currency": "KES",
+      "symbol": "KSh",
+      "wb": "KEN",
+      "cc": "ke",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "sw",
+        "ar"
+      ],
+      "tld": "co.ke"
+    },
+    "ng": {
+      "name": "Nigeria",
+      "nameLocal": {
+        "en": "Nigeria",
+        "fr": "Nigéria",
+        "ar": "نيجيريا"
+      },
+      "currency": "NGN",
+      "symbol": "₦",
+      "wb": "NGA",
+      "cc": "ng",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "yo",
+        "ar"
+      ],
+      "tld": "com.ng"
+    },
+    "za": {
+      "name": "South Africa",
+      "nameLocal": {
+        "en": "South Africa",
+        "fr": "Afrique du Sud",
+        "ar": "جنوب أفريقيا"
+      },
+      "currency": "ZAR",
+      "symbol": "R",
+      "wb": "ZAF",
+      "cc": "za",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "af",
+        "ar"
+      ],
+      "tld": "co.za"
+    },
+    "in": {
+      "name": "India",
+      "nameLocal": {
+        "en": "India",
+        "fr": "Inde",
+        "ar": "الهند"
+      },
+      "currency": "INR",
+      "symbol": "₹",
+      "wb": "IND",
+      "cc": "in",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "hi",
+        "ar"
+      ],
+      "tld": "in"
+    },
+    "pk": {
+      "name": "Pakistan",
+      "nameLocal": {
+        "en": "Pakistan",
+        "fr": "Pakistan",
+        "ar": "باكستان"
+      },
+      "currency": "PKR",
+      "symbol": "Rs",
+      "wb": "PAK",
+      "cc": "pk",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "ur",
+        "ar"
+      ],
+      "tld": "com.pk"
+    },
+    "lk": {
+      "name": "Sri Lanka",
+      "nameLocal": {
+        "en": "Sri Lanka",
+        "fr": "Sri Lanka",
+        "ar": "سريلانكا"
+      },
+      "currency": "LKR",
+      "symbol": "Rs",
+      "wb": "LKA",
+      "cc": "lk",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "si",
+        "ar"
+      ],
+      "tld": "lk"
+    },
+    "bd": {
+      "name": "Bangladesh",
+      "nameLocal": {
+        "en": "Bangladesh",
+        "fr": "Bangladesh",
+        "ar": "بنغلاديش"
+      },
+      "currency": "BDT",
+      "symbol": "৳",
+      "wb": "BGD",
+      "cc": "bd",
+      "dir": "ltr",
+      "langs": [
+        "bn",
+        "en",
+        "ar"
+      ],
+      "tld": "com.bd"
+    },
+    "id": {
+      "name": "Indonesia",
+      "nameLocal": {
+        "en": "Indonesia",
+        "fr": "Indonésie",
+        "ar": "إندونيسيا"
+      },
+      "currency": "IDR",
+      "symbol": "Rp",
+      "wb": "IDN",
+      "cc": "id",
+      "dir": "ltr",
+      "langs": [
+        "id",
+        "en",
+        "ar"
+      ],
+      "tld": "co.id"
+    },
+    "ph": {
+      "name": "Philippines",
+      "nameLocal": {
+        "en": "Philippines",
+        "fr": "Philippines",
+        "ar": "الفلبين"
+      },
+      "currency": "PHP",
+      "symbol": "₱",
+      "wb": "PHL",
+      "cc": "ph",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "tl",
+        "ar"
+      ],
+      "tld": "com.ph"
+    },
+    "vn": {
+      "name": "Vietnam",
+      "nameLocal": {
+        "en": "Vietnam",
+        "fr": "Viêt Nam",
+        "ar": "فيتنام"
+      },
+      "currency": "VND",
+      "symbol": "₫",
+      "wb": "VNM",
+      "cc": "vn",
+      "dir": "ltr",
+      "langs": [
+        "vi",
+        "en",
+        "ar"
+      ],
+      "tld": "com.vn"
+    },
+    "th": {
+      "name": "Thailand",
+      "nameLocal": {
+        "en": "Thailand",
+        "fr": "Thaïlande",
+        "ar": "تايلاند"
+      },
+      "currency": "THB",
+      "symbol": "฿",
+      "wb": "THA",
+      "cc": "th",
+      "dir": "ltr",
+      "langs": [
+        "th",
+        "en",
+        "ar"
+      ],
+      "tld": "co.th"
+    },
+    "my": {
+      "name": "Malaysia",
+      "nameLocal": {
+        "en": "Malaysia",
+        "fr": "Malaisie",
+        "ar": "ماليزيا"
+      },
+      "currency": "MYR",
+      "symbol": "RM",
+      "wb": "MYS",
+      "cc": "my",
+      "dir": "ltr",
+      "langs": [
+        "ms",
+        "en",
+        "ar"
+      ],
+      "tld": "com.my"
+    },
+    "sg": {
+      "name": "Singapore",
+      "nameLocal": {
+        "en": "Singapore",
+        "fr": "Singapour",
+        "ar": "سنغافورة"
+      },
+      "currency": "SGD",
+      "symbol": "S$",
+      "wb": "SGP",
+      "cc": "sg",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "zh",
+        "ar"
+      ],
+      "tld": "com.sg"
+    },
+    "hk": {
+      "name": "Hong Kong SAR China",
+      "nameLocal": {
+        "en": "Hong Kong SAR China",
+        "fr": "Hong Kong",
+        "ar": "هونغ كونغ"
+      },
+      "currency": "HKD",
+      "symbol": "HK$",
+      "wb": "HKG",
+      "cc": "hk",
+      "dir": "ltr",
+      "langs": [
+        "zh",
+        "en",
+        "ar"
+      ],
+      "tld": "com.hk"
+    },
+    "tw": {
+      "name": "Taiwan",
+      "nameLocal": {
+        "en": "Taiwan",
+        "fr": "Taïwan",
+        "ar": "تايوان"
+      },
+      "currency": "TWD",
+      "symbol": "NT$",
+      "wb": "TWN",
+      "cc": "tw",
+      "dir": "ltr",
+      "langs": [
+        "zh",
+        "en",
+        "ar"
+      ],
+      "tld": "com.tw"
+    },
+    "jp": {
+      "name": "Japan",
+      "nameLocal": {
+        "en": "Japan",
+        "fr": "Japon",
+        "ar": "اليابان"
+      },
+      "currency": "JPY",
+      "symbol": "¥",
+      "wb": "JPN",
+      "cc": "jp",
+      "dir": "ltr",
+      "langs": [
+        "ja",
+        "en",
+        "ar"
+      ],
+      "tld": "co.jp"
+    },
+    "kr": {
+      "name": "South Korea",
+      "nameLocal": {
+        "en": "South Korea",
+        "fr": "Corée du Sud",
+        "ar": "كوريا الجنوبية"
+      },
+      "currency": "KRW",
+      "symbol": "₩",
+      "wb": "KOR",
+      "cc": "kr",
+      "dir": "ltr",
+      "langs": [
+        "ko",
+        "en",
+        "ar"
+      ],
+      "tld": "co.kr"
+    },
+    "ca": {
+      "name": "Canada",
+      "nameLocal": {
+        "en": "Canada",
+        "fr": "Canada",
+        "ar": "كندا"
+      },
+      "currency": "CAD",
+      "symbol": "CA$",
+      "wb": "CAN",
+      "cc": "ca",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "fr",
+        "ar"
+      ],
+      "tld": "ca"
+    },
+    "au": {
+      "name": "Australia",
+      "nameLocal": {
+        "en": "Australia",
+        "fr": "Australie",
+        "ar": "أستراليا"
+      },
+      "currency": "AUD",
+      "symbol": "A$",
+      "wb": "AUS",
+      "cc": "au",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "ar",
+        "fr"
+      ],
+      "tld": "com.au"
+    },
+    "nz": {
+      "name": "New Zealand",
+      "nameLocal": {
+        "en": "New Zealand",
+        "fr": "Nouvelle-Zélande",
+        "ar": "نيوزيلندا"
+      },
+      "currency": "NZD",
+      "symbol": "NZ$",
+      "wb": "NZL",
+      "cc": "nz",
+      "dir": "ltr",
+      "langs": [
+        "en",
+        "mi",
+        "ar"
+      ],
+      "tld": "co.nz"
     },
     "us": {
       "name": "United States",
-      "nameLocal": { "en": "United States", "fr": "États-Unis", "ar": "الولايات المتحدة" },
+      "nameLocal": {
+        "en": "United States",
+        "fr": "États-Unis",
+        "ar": "الولايات المتحدة"
+      },
       "currency": "USD",
-      "currencyName": { "en": "US dollar", "fr": "dollar américain", "ar": "دولار أمريكي" },
       "symbol": "US$",
       "wb": "USA",
       "cc": "us",
       "dir": "ltr",
-      "langs": ["en"]
+      "langs": [
+        "en"
+      ],
+      "tld": "com"
     }
   }
 }

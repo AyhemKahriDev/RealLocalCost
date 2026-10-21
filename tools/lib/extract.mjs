@@ -11,6 +11,8 @@
 /* ---------- digit normalisation ---------- */
 
 /* Arabic-Indic (٠-٩) and Extended Arabic-Indic (۰-۹) → ASCII */
+import { classify, DISTINCTIVE, AMBIGUOUS, KNOWN_CODES, containsSymbol } from "./currencies.mjs";
+
 const AR_DIGITS = /[٠-٩۰-۹]/g;
 const AR_DECIMAL = "٫";
 
@@ -76,48 +78,14 @@ export function parseNumber(raw) {
 
 /* ---------- currencies ---------- */
 
-/**
- * Currency detectors, most specific first.
- * `hint` = the market's default currency, used when a symbol is ambiguous
- * (a bare "$" means USD in TN and ARS in AR).
- */
-export const CURRENCIES = {
-  TND: { symbols: ["TND", "DT", "د.ت", "دينار"], ambiguous: false },
-  EGP: { symbols: ["EGP", "ج.م", "ج.م.", "LE", "E£", "جنيه"], ambiguous: false },
-  EUR: { symbols: ["EUR", "€"], ambiguous: false },
-  USD: { symbols: ["US$", "USD", "$"], ambiguous: true },
-  MAD: { symbols: ["MAD", "DH", "د.م."], ambiguous: false },
-  SAR: { symbols: ["SAR", "ر.س", "ريال"], ambiguous: false },
-  AED: { symbols: ["AED", "د.إ"], ambiguous: false },
-  TRY: { symbols: ["TRY", "₺", "TL"], ambiguous: false },
-  ARS: { symbols: ["ARS"], ambiguous: false },
-  JOD: { symbols: ["JOD"], ambiguous: false },
-  DZD: { symbols: ["DZD"], ambiguous: false },
-  GBP: { symbols: ["GBP", "£"], ambiguous: false },
-};
+/* ---------- currencies ---------- */
 
-const CURRENCY_ORDER = Object.keys(CURRENCIES);
-
-/**
- * Find a currency in a price token.
- * @param {string} token e.g. "12,50 DT", "US$9.99", "EGP 49.99", "9,99 €"
- * @param {string} hint  market default currency code
- */
-export function detectCurrency(token, hint) {
-  const t = normalizeDigits(token);
-  const compact = t.replace(/\s+/g, " ");
-  for (const code of CURRENCY_ORDER) {
-    const def = CURRENCIES[code];
-    for (const sym of def.symbols) {
-      if (compact.includes(sym)) {
-        // A bare "$" is ambiguous; prefer the market hint.
-        if (sym === "$" && hint && CURRENCIES[hint]) return hint;
-        return code;
-      }
-    }
-  }
-  return hint || null;
-}
+/* The classification rules live in currencies.mjs: the market's own
+   symbol wins, a currency code beats a symbol, a symbol only one
+   currency uses beats a shared one, and anything unclassifiable stays
+   unknown rather than being guessed. */
+export { KNOWN_CODES, containsSymbol };
+export const detectCurrency = classify;
 
 /* ---------- plan keywords (EN / FR / AR) ---------- */
 
@@ -169,45 +137,150 @@ const PLAN_ALIASES = {
 
 /**
  * Find the plan mentioned closest to a price occurrence.
- * Scans backwards first (EN/FR pricing copy usually reads
- * "Premium Personnel 12,50 DT"), then forwards.
  *
- * `planIds` scopes the search to the plans the service actually has, so
- * Spotify's "Premium" (the product tier) is not mistaken for a plan called
- * "premium" (Netflix, Disney+).
+ * The distance matters as much as the name. "Premium Duo 16,50 DT" is a
+ * strong signal; a plan name 200 characters away, with three other prices
+ * in between, is not. We look at every plan name in the surrounding text
+ * and take the one whose distance from the number is smallest, in either
+ * direction — pricing copy puts the name before the price most of the
+ * time, but not always.
+ *
+ * @param {string} context   text around the number
+ * @param {number} numPos    where the number sits inside that context
+ * @param {number} window    how far a plan name may be and still count
+ * @param {string[]|null} planIds  scope to the plans the service has
+ * @returns {{plan:string, dist:number}|null}
  */
-export function guessPlan(context, window = 220, planIds = null) {
+export function guessPlanWithDistance(context, numPos, window = 90, planIds = null) {
   if (!context) return null;
   const text = normalizeDigits(context).toLowerCase();
-  const head = text.slice(Math.max(0, text.length - window));
-  const tail = text.slice(0, Math.min(window, text.length));
-
   let best = null;
-  let bestPos = -1;
 
   for (const [plan, words] of Object.entries(PLAN_KEYWORDS)) {
     if (planIds && !planIds.includes(plan)) continue;
     for (const w of words) {
-      const i = head.lastIndexOf(w);
-      if (i >= 0 && (bestPos < 0 || i > bestPos)) {
-        bestPos = i;
-        best = plan;
-      }
-    }
-  }
-  if (best) return PLAN_ALIASES[best];
-
-  for (const [plan, words] of Object.entries(PLAN_KEYWORDS)) {
-    if (planIds && !planIds.includes(plan)) continue;
-    for (const w of words) {
-      const i = tail.indexOf(w);
-      if (i >= 0 && (bestPos < 0 || i < bestPos)) {
-        bestPos = i;
-        best = plan;
+      let idx = text.indexOf(w);
+      while (idx !== -1) {
+        const centre = idx + w.length / 2;
+        const dist = Math.abs(centre - numPos);
+        if (dist <= window && (!best || dist < best.dist)) {
+          best = { plan: PLAN_ALIASES[plan], dist };
+        }
+        idx = text.indexOf(w, idx + 1);
       }
     }
   }
   return best;
+}
+
+/** Just the plan id, for callers that do not care how far away it was. */
+export function guessPlan(context, window = 70, planIds = null) {
+  const g = guessPlanWithDistance(context, context.length / 2, window, planIds);
+  return g ? g.plan : null;
+}
+
+
+/* Every plan name in the text, in reading order. */
+function namesInOrder(text, planIds) {
+  const lower = text.toLowerCase();
+  const out = [];
+  for (const [plan, words] of Object.entries(PLAN_KEYWORDS)) {
+    if (planIds && !planIds.includes(plan)) continue;
+    for (const w of words) {
+      let idx = lower.indexOf(w);
+      while (idx !== -1) {
+        out.push({ plan: PLAN_ALIASES[plan], pos: idx, centre: idx + w.length / 2 });
+        idx = lower.indexOf(w, idx + 1);
+      }
+    }
+  }
+  out.sort((a, b) => a.pos - b.pos);
+  /* Collapse repeats of the same name a few characters apart. */
+  const collapsed = [];
+  for (const n of out) {
+    const prev = collapsed[collapsed.length - 1];
+    if (prev && prev.plan === n.plan && n.pos - prev.pos < 12) continue;
+    collapsed.push(n);
+  }
+  return collapsed;
+}
+
+/**
+ * Pair names with prices, keeping the order.
+ *
+ * The objective is lexicographic: make as many pairs as possible, and
+ * among the pairings that do that, make them as close as possible.
+ * (Minimising distance alone would be satisfied by pairing nothing at
+ * all, which is not the point.)
+ *
+ * Dynamic program over (name index, price index).
+ * Returns a map from price position to { plan, dist }.
+ */
+function assignMonotonic(names, hits, maxDist) {
+  const out = new Map();
+  const m = names.length;
+  const k = hits.length;
+  if (!m || !k) return out;
+
+  const count = Array.from({ length: m + 1 }, () => new Int32Array(k + 1).fill(-1));
+  const cost = Array.from({ length: m + 1 }, () => new Float64Array(k + 1).fill(Infinity));
+  const choice = Array.from({ length: m + 1 }, () => new Int8Array(k + 1).fill(0));
+
+  for (let j = 0; j <= k; j++) {
+    count[m][j] = 0;
+    cost[m][j] = 0;
+  }
+  for (let i = 0; i <= m; i++) {
+    count[i][k] = 0;
+    cost[i][k] = 0;
+  }
+
+  const better = (c1, d1, c2, d2) => (c1 !== c2 ? c1 > c2 : d1 < d2);
+
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = k - 1; j >= 0; j--) {
+      /* skip this price */
+      let bestC = count[i][j + 1];
+      let bestD = cost[i][j + 1];
+      let bestCh = 0;
+      /* skip this name */
+      if (better(count[i + 1][j], cost[i + 1][j], bestC, bestD)) {
+        bestC = count[i + 1][j];
+        bestD = cost[i + 1][j];
+        bestCh = 1;
+      }
+      /* pair them */
+      const d = Math.abs(names[i].centre - hits[j].pos);
+      if (d <= maxDist) {
+        const c = count[i + 1][j + 1] + 1;
+        const k2 = cost[i + 1][j + 1] + d;
+        if (better(c, k2, bestC, bestD)) {
+          bestC = c;
+          bestD = k2;
+          bestCh = 2;
+        }
+      }
+      count[i][j] = bestC;
+      cost[i][j] = bestD;
+      choice[i][j] = bestCh;
+    }
+  }
+
+  let i = 0;
+  let j = 0;
+  while (i < m && j < k) {
+    const c = choice[i][j];
+    if (c === 2) {
+      out.set(hits[j].pos, { plan: names[i].plan, dist: Math.abs(names[i].centre - hits[j].pos) });
+      i++;
+      j++;
+    } else if (c === 0) {
+      j++;
+    } else {
+      i++;
+    }
+  }
+  return out;
 }
 
 /* ---------- the extractor ---------- */
@@ -215,6 +288,9 @@ export function guessPlan(context, window = 220, planIds = null) {
 const TAG_RE = /<[^>]+>/g;
 const SCRIPT_RE = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
 const STYLE_RE = /<style\b[^>]*>[\s\S]*?<\/style>/gi;
+
+/* A plan name further than this from a price is not that price's name. */
+const NAME_MAX_DISTANCE = 60;
 
 const NUM = String.raw`\d{1,3}(?:[ , . ]\d{3})*(?:[.,]\d{1,2})?|\d+(?:[.,]\d{1,2})?`;
 
@@ -229,8 +305,21 @@ const NUM = String.raw`\d{1,3}(?:[ , . ]\d{3})*(?:[.,]\d{1,2})?|\d+(?:[.,]\d{
  * @returns {Array<{value:number,currency:string,raw:string,plan:?string,context:string}>}
  */
 export function extractPrices(html, opts = {}) {
-  const { market = "", currency = "USD", currencySymbols = [], planIds = null } = opts;
-  const syms = [...new Set([...currencySymbols, ...Object.values(CURRENCIES).flatMap((c) => c.symbols)])];
+  const marketObj = typeof opts.market === "object" && opts.market ? opts.market : null;
+  const marketCode = marketObj ? marketObj.code : (opts.market || "");
+  const currency = marketObj ? marketObj.currency : (opts.currency || "USD");
+  const { planIds = null, currencySymbols = [] } = opts;
+  const aliases = marketObj ? marketObj.aliases : null;
+  const ownSymbol = marketObj ? marketObj.symbol : null;
+  const syms = [
+    ...new Set([
+      ...currencySymbols,
+      ...(ownSymbol ? [ownSymbol] : []),
+      ...Object.values(DISTINCTIVE).flat(),
+      ...Object.values(AMBIGUOUS).flat(),
+      ...KNOWN_CODES,
+    ]),
+  ];
   // Longest first so "US$" wins over "$", "د.م." over "م".
   syms.sort((a, b) => b.length - a.length);
   const symRe = syms.map(escapeRe).join("|");
@@ -239,18 +328,22 @@ export function extractPrices(html, opts = {}) {
   const results = [];
   const seen = new Set();
 
-  const add = (raw, context) => {
+  const add = (raw, context, numPos, assignment, dist, before = "", after = "") => {
     const value = parseNumber(raw);
     if (value == null || value <= 0 || value > 100000) return;
-    const cur = detectCurrency(context, currency);
-    const key = `${value}|${cur}|${guessPlan(context, 220, planIds) || ""}`;
+    const cur = detectCurrency(context, { currency, symbol: ownSymbol, aliases });
+    const g = assignment ? { plan: assignment.plan, dist } : null;
+    const key = `${value}|${cur}|${g ? g.plan : ""}`;
     if (seen.has(key)) return;
     seen.add(key);
     results.push({
       value: Math.round(value * 100) / 100,
       currency: cur,
       raw: normalizeDigits(raw).trim(),
-      plan: guessPlan(context, 220, planIds),
+      plan: g ? g.plan : null,
+      planDist: g ? g.dist : null,
+      before: normalizeDigits(before).replace(/\s+/g, " ").trim(),
+      after: normalizeDigits(after).replace(/\s+/g, " ").trim(),
       context: normalizeDigits(context).replace(/\s+/g, " ").trim().slice(-260),
     });
   };
@@ -274,32 +367,88 @@ export function extractPrices(html, opts = {}) {
       const around = s.slice(Math.max(0, mm.index - 400), mm.index + 60);
       const val = parseNumber(mm[1]);
       if (val == null || val <= 0) continue;
-      const cur = detectCurrency(mm[1], currency);
-      const key = `${Math.round(val * 100) / 100}|${cur}|${guessPlan(around, 220, planIds) || ""}`;
+      const cur = detectCurrency(mm[1], { currency, symbol: ownSymbol, aliases });
+      /* The price sits inside the JSON, so the words around it are the
+         JSON around it: "duration":"3 months" before, "checkoutUrl"
+         after. */
+      const pStart = around.length - 60;
+      const jsonBefore = around.slice(Math.max(0, pStart - 110), pStart);
+      const jsonAfter = around.slice(pStart, pStart + 32);
+      const g2 = guessPlanWithDistance(around, around.length / 2, 90, planIds);
+      const key = `${Math.round(val * 100) / 100}|${cur}|${g2 ? g2.plan : ""}`;
       if (seen.has(key)) continue;
       seen.add(key);
       results.push({
         value: Math.round(val * 100) / 100,
         currency: cur,
         raw: normalizeDigits(mm[1]).trim(),
-        plan: guessPlan(around, 220, planIds),
+        plan: g2 ? g2.plan : null,
+        planDist: g2 ? g2.dist : null,
+        before: normalizeDigits(jsonBefore).replace(/\s+/g, " ").trim(),
+        after: normalizeDigits(jsonAfter).replace(/\s+/g, " ").trim(),
         context: normalizeDigits(around).replace(/\s+/g, " ").trim().slice(-260),
       });
     }
+  }
+
+  /* How often is each price quoted? A monthly price is repeated in the
+     plan card, the price list and the FAQ; a prepaid bundle total is
+     mentioned once. The number a page repeats is the price of the
+     plan; the one it mentions in passing is usually something else. */
+  const counts = new Map();
+  for (const r of results) {
+    const k = `${r.plan || "?"}|${r.value}`;
+    counts.set(k, (counts.get(k) || 0) + 1);
+  }
+  for (const r of results) {
+    r.quoted = counts.get(`${r.plan || "?"}|${r.value}`) || 1;
   }
 
   results.sort((a, b) => a.value - b.value);
   return results;
 
   function scan(text) {
+    /* Pass 1 — every price in the text, with its position. */
+    const hits = [];
     let mm;
     re.lastIndex = 0;
     while ((mm = re.exec(text))) {
       const raw = mm[1] || mm[2];
       if (!raw) continue;
-      const start = mm.index;
-      const context = text.slice(Math.max(0, start - 200), Math.min(text.length, start + 90));
-      add(raw, context);
+      const value = parseNumber(raw);
+      if (value == null || value <= 0 || value > 100000) continue;
+      hits.push({ raw, value, pos: mm.index + mm[0].indexOf(raw) });
+    }
+    if (!hits.length) return;
+
+    /* Pass 2 and 3 — pair plan names with prices.
+
+       In a price list the names and the prices run in the same order, so
+       the pairing has to be MONOTONIC: if "Premium Duo" is the second
+       name, it is the second price. Finding the pairing that minimises
+       total distance while staying in order is a small dynamic program,
+       and it is what keeps "Premium Personnel 12,50" from being read as
+       the plan for the price on the far side of "Premium Duo".
+
+       The greedy nearest-neighbour version of this gets it wrong on
+       exactly the pages that matter. This does not. */
+    const names = namesInOrder(text, planIds);
+    const assignment = assignMonotonic(names, hits, NAME_MAX_DISTANCE);
+
+    /* Pass 4 — build the candidates. */
+    for (const h of hits) {
+      const a = assignment.get(h.pos);
+      const ctxStart = Math.max(0, h.pos - 160);
+      const ctxEnd = Math.min(text.length, h.pos + 120);
+      const context = text.slice(ctxStart, ctxEnd);
+      /* The words immediately before a number say what it is ("for 6
+         months, 22,50 MAD"); the words immediately after say what
+         happens next ("45 MAD/mois ensuite" — and then). Keeping the
+         two apart is what separates a standing price from a
+         promotional one. */
+      const before = text.slice(Math.max(0, h.pos - 110), h.pos);
+      const after = text.slice(h.pos, Math.min(text.length, h.pos + 32));
+      add(h.raw, context, h.pos - ctxStart, a && !a.ambiguous ? a : null, a ? a.dist : null, before, after);
     }
   }
 }

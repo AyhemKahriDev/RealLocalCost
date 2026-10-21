@@ -33,7 +33,7 @@ async function pull(wbCode) {
       if (!r.json || !Array.isArray(r.json) || r.json.length < 2) {
         throw new Error(`World Bank returned no data for ${wbCode}: ${r.error || r.status}`);
       }
-      const rows = r.json[1];
+      const rows = r.json[1] || [];
       const series = rows
         .filter((x) => x.value != null)
         .map((x) => [String(x.date), Math.round(Number(x.value) * 100) / 100])
@@ -75,7 +75,7 @@ async function main() {
       process.stdout.write(`· ${code} `);
       try {
         const { series, lastUpdated } = await pull(m.wb);
-        if (!series.length) throw new Error("empty series");
+        if (!series.length) throw new Error("no data for " + m.wb);
         const [year, value] = series[series.length - 1];
         out.markets[code] = {
           currency: m.currency,

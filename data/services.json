@@ -1,297 +1,334 @@
 {
-  "_comment": "Service registry. `pricingUrl` is a template: {cc} = market country code, {lang} = market language. `plans` are canonical ids; labels live in src/i18n/*.json under `plan.<id>`. `source` tells the harvester which free channel to use: 'live' = fetch the page directly, 'wayback' = read the archived snapshot index, 'both' = live now plus archived history.",
+  "_comment": "Service registry. `pricingUrl` is a template: {cc} = market country code, {ccUpper} = uppercase, {tld} = amazon-style domain, {lang} = market language. `markets` = where to look. `localises` = whether the service actually prices per market, or ships one global price to everybody — that verdict is the point of the site, so it is recorded here and re-checked by the watcher. `plans` are canonical ids; labels live in src/i18n/*.json under plan.<id>.",
+
   "services": {
     "spotify": {
       "name": "Spotify",
       "category": "Music",
       "homepage": "https://www.spotify.com/",
       "pricingUrl": "https://www.spotify.com/{cc}/premium/",
-      "archive": {
-        "prefix": "www.spotify.com/{cc}",
-        "path": "/premium",
-        "exclude": []
-      },
+      "archive": { "prefix": "www.spotify.com/{cc}", "path": "/premium" },
       "source": "both",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "de",
-        "us"
-      ],
+      "localises": true,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "qa", "kw", "om", "bh", "lb", "fr", "de", "gb", "es", "it", "nl", "be", "at", "ie", "pt", "fi", "gr", "lu", "mt", "cy", "se", "no", "dk", "pl", "cz", "ch", "hu", "ro", "tr", "ua", "il", "ar", "cl", "co", "pe", "br", "mx", "ke", "ng", "za", "in", "pk", "lk", "bd", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
       "plans": [
-        {
-          "id": "individual",
-          "flagship": true
-        },
-        {
-          "id": "duo"
-        },
-        {
-          "id": "platinum"
-        },
-        {
-          "id": "family"
-        },
-        {
-          "id": "student"
-        }
+        { "id": "individual", "flagship": true },
+        { "id": "duo" },
+        { "id": "platinum" },
+        { "id": "family" },
+        { "id": "student" }
       ],
-      "note": "Ships per-country pricing pages with server-rendered prices. Arabic-Indic numerals on the EG page — the extractor normalises them."
+      "note": "The clearest case of a service that prices per market. The Saudi storefront uses its own tier names — Standard and Platinum instead of Individual and Family — and several markets pay through the mobile carrier bill."
     },
-    "netflix": {
-      "name": "Netflix",
+
+    "prime-video": {
+      "name": "Amazon Prime Video",
       "category": "Streaming",
-      "homepage": "https://www.netflix.com/",
-      "pricingUrl": "https://www.netflix.com/{cc}/",
-      "archive": {
-        "prefix": "www.netflix.com/{cc}",
-        "path": "",
-        "exclude": [
-          "/title/",
-          "/browse/",
-          "/watch/",
-          "/gift/"
-        ]
-      },
+      "homepage": "https://www.amazon.com/primevideo",
+      "pricingUrl": "https://www.amazon.{tld}/prime",
       "source": "both",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "tr",
-        "de",
-        "us"
-      ],
+      "localises": true,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "qa", "kw", "om", "bh", "lb", "fr", "de", "gb", "es", "it", "nl", "be", "at", "ie", "pt", "fi", "gr", "lu", "mt", "cy", "se", "no", "dk", "pl", "cz", "ch", "hu", "ro", "tr", "ua", "il", "ar", "cl", "co", "pe", "br", "mx", "ke", "ng", "za", "in", "pk", "lk", "bd", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
       "plans": [
-        {
-          "id": "withads"
-        },
-        {
-          "id": "standard",
-          "flagship": true
-        },
-        {
-          "id": "premium"
-        }
+        { "id": "standard", "flagship": true },
+        { "id": "family" }
       ],
-      "note": "Netflix geo-redirects to the requester's country, so a fetch from outside the market may return the wrong market. The receipt records the final URL that answered, and prices are labelled with the currency actually shown. In TN the page quotes US dollars — a finding in itself."
+      "note": "Amazon prices Prime per market, and in several markets Prime Video is bundled with Prime rather than sold alone."
     },
+
     "apple-tv": {
       "name": "Apple TV+",
       "category": "Streaming",
       "homepage": "https://tv.apple.com/",
       "pricingUrl": "https://www.apple.com/{cc}/apple-tv-plus/",
-      "archive": {
-        "prefix": "www.apple.com/{cc}",
-        "path": "/apple-tv",
-        "exclude": []
-      },
+      "archive": { "prefix": "www.apple.com/{cc}", "path": "/apple-tv" },
       "source": "both",
-      "markets": [
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "de",
-        "us"
-      ],
-      "plans": [
-        {
-          "id": "standard",
-          "flagship": true
-        }
-      ],
+      "localises": true,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "qa", "kw", "om", "bh", "fr", "de", "gb", "es", "it", "nl", "be", "at", "ie", "pt", "fi", "gr", "lu", "mt", "cy", "se", "no", "dk", "pl", "cz", "ch", "hu", "ro", "tr", "ua", "il", "ar", "cl", "co", "pe", "br", "mx", "ke", "ng", "za", "in", "pk", "lk", "bd", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [{ "id": "standard", "flagship": true }],
       "note": "Apple ships a per-country store page. In some markets Apple TV+ is not sold standalone: in Egypt it is included in every iCloud+ plan, so the price quoted is the iCloud+ entry tier."
     },
-    "disney": {
-      "name": "Disney+",
-      "category": "Streaming",
-      "homepage": "https://www.disneyplus.com/",
-      "pricingUrl": "https://www.disneyplus.com/{cc}/",
-      "archive": {
-        "prefix": "www.disneyplus.com/{cc}",
-        "path": "",
-        "exclude": [
-          "/movies/",
-          "/series/",
-          "/browse/"
-        ]
-      },
-      "source": "wayback",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "de",
-        "us"
-      ],
+
+    "apple-music": {
+      "name": "Apple Music",
+      "category": "Music",
+      "homepage": "https://music.apple.com/",
+      "pricingUrl": "https://www.apple.com/{cc}/apple-music/",
+      "source": "both",
+      "localises": true,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "qa", "kw", "om", "bh", "fr", "de", "gb", "es", "it", "nl", "be", "at", "ie", "pt", "fi", "gr", "lu", "mt", "cy", "se", "no", "dk", "pl", "cz", "ch", "hu", "ro", "tr", "ua", "il", "ar", "cl", "co", "pe", "br", "mx", "ke", "ng", "za", "in", "pk", "lk", "bd", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
       "plans": [
-        {
-          "id": "basic"
-        },
-        {
-          "id": "standard",
-          "flagship": true
-        },
-        {
-          "id": "premium"
-        }
-      ],
-      "note": "Redirects to the global storefront from most origins; archived snapshots are the reliable channel."
+        { "id": "individual", "flagship": true },
+        { "id": "family" }
+      ]
     },
-    "youtube-premium": {
-      "name": "YouTube Premium",
-      "category": "Streaming",
-      "homepage": "https://www.youtube.com/premium",
-      "pricingUrl": "https://www.youtube.com/premium?gl={ccUpper}",
-      "archive": {
-        "prefix": "www.youtube.com/premium",
-        "path": "",
-        "exclude": []
-      },
-      "source": "wayback",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "de",
-        "us"
-      ],
+
+    "icloud": {
+      "name": "iCloud+",
+      "category": "Storage",
+      "homepage": "https://www.icloud.com/",
+      "pricingUrl": "https://www.apple.com/{cc}/icloud/",
+      "source": "both",
+      "localises": true,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "qa", "kw", "om", "bh", "fr", "de", "gb", "es", "it", "nl", "be", "at", "ie", "pt", "fi", "gr", "lu", "mt", "cy", "se", "no", "dk", "pl", "cz", "ch", "hu", "ro", "tr", "ua", "il", "ar", "cl", "co", "pe", "br", "mx", "ke", "ng", "za", "in", "pk", "lk", "bd", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
       "plans": [
-        {
-          "id": "individual",
-          "flagship": true
-        },
-        {
-          "id": "family"
-        }
+        { "id": "standard", "flagship": true },
+        { "id": "family" }
       ],
-      "note": "Prices are rendered client-side and vary by gl and by channel, so extraction is noisy. Human-confirmed only."
+      "note": "iCloud+ is where Apple hides Apple TV+ in markets that do not sell it separately."
     },
-    "chatgpt": {
-      "name": "ChatGPT Plus",
-      "category": "AI",
-      "homepage": "https://openai.com/chatgpt/",
-      "pricingUrl": "https://openai.com/chatgpt/pricing/",
-      "archive": {
-        "prefix": "openai.com/chatgpt",
-        "path": "/pricing",
-        "exclude": []
-      },
-      "source": "wayback",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "de",
-        "us"
-      ],
-      "plans": [
-        {
-          "id": "plus",
-          "flagship": true
-        }
-      ],
-      "note": "openai.com returns 403 to bots; archived snapshots are the channel."
-    },
+
     "deezer": {
       "name": "Deezer",
       "category": "Music",
       "homepage": "https://www.deezer.com/",
       "pricingUrl": "https://www.deezer.com/{cc}",
-      "archive": {
-        "prefix": "www.deezer.com/{cc}",
-        "path": "",
-        "exclude": []
-      },
       "source": "both",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "ma",
-        "de"
-      ],
+      "localises": true,
+      "markets": ["tn", "eg", "fr", "de", "gb", "es", "it", "nl", "be", "at", "pt", "ch", "ma", "tr", "ar", "br", "mx", "za", "ng", "ke", "in", "id", "my", "sg", "hk", "jp", "ca", "au"],
       "plans": [
-        {
-          "id": "individual",
-          "flagship": true
-        },
-        {
-          "id": "family"
-        }
+        { "id": "individual", "flagship": true },
+        { "id": "family" }
       ],
-      "note": "Deezer is a France-based local alternative to Spotify in several markets."
+      "note": "The French alternative to Spotify, and priced in euros in the markets where it operates."
     },
-    "dropbox": {
-      "name": "Dropbox",
-      "category": "Storage",
-      "homepage": "https://www.dropbox.com/",
-      "pricingUrl": "https://www.dropbox.com/{cc}/plans",
-      "archive": {
-        "prefix": "www.dropbox.com/{cc}",
-        "path": "/plans",
-        "exclude": []
-      },
+
+    "microsoft365": {
+      "name": "Microsoft 365",
+      "category": "Software",
+      "homepage": "https://www.microsoft.com/microsoft-365",
+      "pricingUrl": "https://www.microsoft.com/{cc}/microsoft-365/compare-all-microsoft-365-products",
+      "source": "both",
+      "localises": true,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "nl", "be", "at", "ie", "pt", "fi", "gr", "tr", "ua", "pl", "cz", "hu", "ro", "il", "ar", "cl", "co", "pe", "br", "mx", "ke", "ng", "za", "in", "pk", "lk", "bd", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "individual", "flagship": true },
+        { "id": "family" }
+      ]
+    },
+
+    "netflix": {
+      "name": "Netflix",
+      "category": "Streaming",
+      "homepage": "https://www.netflix.com/",
+      "pricingUrl": "https://www.netflix.com/{cc}/",
+      "archive": { "prefix": "www.netflix.com/{cc}", "path": "" },
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "qa", "kw", "om", "bh", "fr", "de", "gb", "es", "it", "nl", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "withads" },
+        { "id": "standard", "flagship": true },
+        { "id": "premium" }
+      ],
+      "note": "Netflix quotes in US dollars on the pages we can read, and redirects the request to the reader's own country. It bills some markets in dollars, which is why the dinar cost of a subscription moves with the exchange rate."
+    },
+
+    "youtube-premium": {
+      "name": "YouTube Premium",
+      "category": "Streaming",
+      "homepage": "https://www.youtube.com/premium",
+      "pricingUrl": "https://www.youtube.com/premium?gl={ccUpper}",
+      "archive": { "prefix": "www.youtube.com/premium", "path": "" },
       "source": "wayback",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "de",
-        "us"
-      ],
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
       "plans": [
-        {
-          "id": "standard",
-          "flagship": true
-        },
-        {
-          "id": "family"
-        }
+        { "id": "individual", "flagship": true },
+        { "id": "family" }
       ],
-      "note": "Shipped per-country price lists; archived snapshots read cleanly."
+      "note": "Prices are rendered client-side and vary by gl and by channel, so extraction is noisy. Human-confirmed only."
     },
+
+    "chatgpt": {
+      "name": "ChatGPT Plus",
+      "category": "AI",
+      "homepage": "https://openai.com/chatgpt/",
+      "pricingUrl": "https://openai.com/chatgpt/pricing/",
+      "archive": { "prefix": "openai.com/chatgpt", "path": "/pricing" },
+      "source": "wayback",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [{ "id": "plus", "flagship": true }],
+      "note": "openai.com returns 403 to bots; archived snapshots are the channel."
+    },
+
     "adobe": {
       "name": "Adobe Creative Cloud",
       "category": "Software",
       "homepage": "https://www.adobe.com/creativecloud.html",
       "pricingUrl": "https://www.adobe.com/{cc}/creativecloud/plans.html",
-      "archive": {
-        "prefix": "www.adobe.com/{cc}",
-        "path": "/creativecloud",
-        "exclude": []
-      },
+      "archive": { "prefix": "www.adobe.com/{cc}", "path": "/creativecloud" },
       "source": "wayback",
-      "markets": [
-        "tn",
-        "eg",
-        "fr",
-        "sa",
-        "ma",
-        "de",
-        "us"
-      ],
-      "plans": [
-        {
-          "id": "allapps",
-          "flagship": true
-        }
-      ],
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [{ "id": "allapps", "flagship": true }],
       "note": "adobe.com blocks datacenter IPs; archived snapshots only."
+    },
+
+    "dropbox": {
+      "name": "Dropbox",
+      "category": "Storage",
+      "homepage": "https://www.dropbox.com/",
+      "pricingUrl": "https://www.dropbox.com/{cc}/plans",
+      "archive": { "prefix": "www.dropbox.com/{cc}", "path": "/plans" },
+      "source": "wayback",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "standard", "flagship": true },
+        { "id": "family" }
+      ]
+    },
+
+    "disney": {
+      "name": "Disney+",
+      "category": "Streaming",
+      "homepage": "https://www.disneyplus.com/",
+      "pricingUrl": "https://www.disneyplus.com/{cc}/",
+      "archive": { "prefix": "www.disneyplus.com/{cc}", "path": "" },
+      "source": "wayback",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "basic" },
+        { "id": "standard", "flagship": true },
+        { "id": "premium" }
+      ]
+    },
+
+    "notion": {
+      "name": "Notion",
+      "category": "Software",
+      "homepage": "https://www.notion.com/",
+      "pricingUrl": "https://www.notion.com/pricing",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "individual", "flagship": true },
+        { "id": "team" }
+      ]
+    },
+
+    "canva": {
+      "name": "Canva",
+      "category": "Software",
+      "homepage": "https://www.canva.com/",
+      "pricingUrl": "https://www.canva.com/pricing/?country={ccUpper}",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "individual", "flagship": true },
+        { "id": "team" }
+      ]
+    },
+
+    "figma": {
+      "name": "Figma",
+      "category": "Software",
+      "homepage": "https://www.figma.com/",
+      "pricingUrl": "https://www.figma.com/pricing/",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "professional", "flagship": true },
+        { "id": "organization" }
+      ]
+    },
+
+    "discord": {
+      "name": "Discord Nitro",
+      "category": "Social",
+      "homepage": "https://discord.com/",
+      "pricingUrl": "https://discord.com/nitro",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "basic", "flagship": true },
+        { "id": "premium" }
+      ]
+    },
+
+    "slack": {
+      "name": "Slack",
+      "category": "Software",
+      "homepage": "https://slack.com/",
+      "pricingUrl": "https://slack.com/pricing",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "pro", "flagship": true },
+        { "id": "business" }
+      ]
+    },
+
+    "trello": {
+      "name": "Trello",
+      "category": "Software",
+      "homepage": "https://trello.com/",
+      "pricingUrl": "https://trello.com/pricing",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "standard", "flagship": true },
+        { "id": "premium" }
+      ]
+    },
+
+    "protonvpn": {
+      "name": "Proton VPN",
+      "category": "Software",
+      "homepage": "https://protonvpn.com/",
+      "pricingUrl": "https://protonvpn.com/pricing",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "standard", "flagship": true },
+        { "id": "plus" }
+      ]
+    },
+
+    "strava": {
+      "name": "Strava",
+      "category": "Fitness",
+      "homepage": "https://www.strava.com/",
+      "pricingUrl": "https://www.strava.com/subscription",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [{ "id": "individual", "flagship": true }]
+    },
+
+    "skillshare": {
+      "name": "Skillshare",
+      "category": "Learning",
+      "homepage": "https://www.skillshare.com/",
+      "pricingUrl": "https://www.skillshare.com/pricing",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [
+        { "id": "individual", "flagship": true },
+        { "id": "team" }
+      ]
+    },
+
+    "mubi": {
+      "name": "MUBI",
+      "category": "Streaming",
+      "homepage": "https://mubi.com/",
+      "pricingUrl": "https://mubi.com/",
+      "source": "both",
+      "localises": false,
+      "markets": ["tn", "eg", "sa", "ma", "dz", "jo", "iq", "ae", "fr", "de", "gb", "es", "it", "pl", "tr", "ua", "il", "ar", "br", "mx", "ke", "ng", "za", "in", "id", "ph", "vn", "th", "my", "sg", "hk", "jp", "kr", "ca", "au", "nz", "us"],
+      "plans": [{ "id": "standard", "flagship": true }]
     }
   }
 }
