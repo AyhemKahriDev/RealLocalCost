@@ -54,10 +54,13 @@ jobs:
 
   cloudflare:
     needs: build
-    # Skipped until a Cloudflare API token is added as a repo secret.
-    # The token needs one permission: Account → Cloudflare Pages → Edit.
-    if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
     runs-on: ubuntu-latest
+    # The secrets context is not available in a job-level `if`, so the
+    # token is exposed as an env var and the job checks that instead.
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -69,9 +72,6 @@ jobs:
         run: node src/build.mjs
 
       - name: Deploy to Cloudflare Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           npx --yes wrangler@4.151.3 pages deploy site \
             --project-name=reallocalcost \
