@@ -49,8 +49,11 @@ jobs:
 
   cloudflare:
     needs: build
-    # Skipped until a Cloudflare API token is added as a repo secret.
-    # The token needs one permission: Account → Cloudflare Pages → Edit.
+    # The deploy is skipped by the shell when no token is set, rather than
+    # by a workflow condition: a step-level `if` that reads `env` is
+    # rejected by the workflow parser.
+    #
+    # The token needs one permission: Account > Cloudflare Pages > Edit.
     steps:
       - uses: actions/checkout@v4
 
@@ -62,23 +65,19 @@ jobs:
         run: node src/build.mjs --base=/
 
       - name: Deploy to Cloudflare Pages
-        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "No CLOUDFLARE_API_TOKEN secret - the Cloudflare deploy is skipped."
+            echo "The GitHub Pages mirror is still published by this run."
+            exit 0
+          fi
           npx --yes wrangler@4.151.3 pages deploy site \
             --project-name=reallocalcost \
             --branch=main \
             --commit-dirty=true
-
-      - name: Skip the Cloudflare deploy
-        if: ${{ env.CLOUDFLARE_API_TOKEN == '' }}
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: |
-          echo "No CLOUDFLARE_API_TOKEN secret — the Cloudflare deploy is skipped."
-          echo "The GitHub Pages mirror is still published by this run."
 
   github-pages:
     needs: build
