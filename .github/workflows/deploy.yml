@@ -54,6 +54,9 @@ jobs:
 
   cloudflare:
     needs: build
+    # Skipped until a Cloudflare API token is added as a repo secret.
+    # The token needs one permission: Account → Cloudflare Pages → Edit.
+    if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -65,17 +68,9 @@ jobs:
       - name: Build the site
         run: node src/build.mjs
 
-      # wrangler reads its OAuth credentials from this file and refreshes
-      # them itself when they expire, so the deploy needs no API token.
-      - name: Restore the Cloudflare credentials
-        env:
-          CF_WRANGLER_CONFIG: ${{ secrets.CF_WRANGLER_CONFIG }}
-        run: |
-          mkdir -p ~/.config/.wrangler/config
-          printf '%s' "$CF_WRANGLER_CONFIG" > ~/.config/.wrangler/config/default.toml
-
       - name: Deploy to Cloudflare Pages
         env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           npx --yes wrangler@4.151.3 pages deploy site \

@@ -2,6 +2,9 @@
 
 **What digital services actually cost, where you live, as a share of what people earn there.**
 
+> **Live:** <https://reallocalcost.pages.dev> · mirror: <https://ayhemkahridev.github.io/RealLocalCost/> ·
+> code and data: <https://github.com/AyhemKahriDev/RealLocalCost>
+
 Netflix is $15 in one country and the price of a week of groceries in the next. This project
 prices digital subscriptions in each market's own currency, then divides by what people earn
 there — so the number means the same thing in Tunis, Cairo and Paris.
@@ -172,12 +175,46 @@ The machine proposes the numbers. You decide what they mean.
 
 ## Deploying
 
-Push to `main` and the `Deploy` workflow publishes `site/` to GitHub Pages. The `Nightly watch`
-workflow runs the triage every night and opens an issue when a pricing page moves.
+Two homes, one build:
 
-For a custom domain, point a `CNAME` at the Pages host and add the domain in the repository
-settings. `*.eu.org` is free but human-reviewed — submit the request early and launch on the
-`*.github.io` URL in the meantime.
+| | URL | How it deploys |
+|---|---|---|
+| **Cloudflare Pages** (canonical) | `reallocalcost.pages.dev` | `npm run deploy`, or CI once an API token is added |
+| GitHub Pages (mirror) | `ayhemkahridev.github.io/RealLocalCost/` | automatically on every push to `main` |
+
+Both are built from the same `site/` directory, so they cannot disagree.
+
+To deploy to Cloudflare by hand:
+
+```sh
+npm run deploy
+```
+
+To make CI deploy to Cloudflare automatically, add one secret:
+
+```sh
+# Cloudflare dashboard → My Profile → API Tokens → Create Token
+#   Permissions: Account → Cloudflare Pages → Edit
+gh secret set CLOUDFLARE_API_TOKEN --repo AyhemKahriDev/RealLocalCost
+```
+
+The `Cloudflare` job skips itself until that secret exists, so the GitHub Pages mirror keeps
+working either way.
+
+### A real domain, for free
+
+`reallocalcost.pages.dev` is fine forever. For `reallocalcost.eu.org` (also free, and the
+same route WorseWatch uses):
+
+1. **nic.eu.org/arf/** — sign in with the contact handle, request a domain for
+   `reallocalcost`, list the deSEC name servers (`ns1.desec.io`, `ns2.desec.org`), submit.
+   Human review: days to weeks.
+2. When it is approved, add it as a custom domain on the Cloudflare Pages project, and point
+   a `CNAME` at `reallocalcost.pages.dev` in deSEC.
+3. The `CNAME` in the Pages project should be `reallocalcost.pages.dev`.
+
+Do the EU.org request early — it is the slow part. The site works on the `pages.dev` URL
+while you wait.
 
 ---
 

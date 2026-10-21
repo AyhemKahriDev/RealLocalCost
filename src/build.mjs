@@ -113,6 +113,12 @@ async function main() {
   await cp(join(ROOT, "public"), join(SITE_DIR, "assets"), { recursive: true });
   // og.html is the source of the social card, not a page anyone visits.
   await rm(join(SITE_DIR, "assets", "og.html"), { force: true });
+  // A CNAME, if one is set, belongs at the root of the published site.
+  try {
+    await cp(join(ROOT, "public", "CNAME"), join(SITE_DIR, "CNAME"));
+  } catch {
+    /* no custom domain yet */
+  }
   // The social card sits at the root so the meta tag has one stable URL.
   try {
     await cp(join(ROOT, "public", "og.png"), join(SITE_DIR, "og.png"));
