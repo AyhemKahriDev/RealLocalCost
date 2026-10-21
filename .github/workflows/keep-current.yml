@@ -1,0 +1,102 @@
+name: Keep current
+
+# The site updates itself. Every six hours the machine re-reads every
+# pricing page it can reach, publishes the prices it is confident
+# about, and files an issue for the ones it is not. The wire is
+# regenerated from the history, and the site is rebuilt.
+#
+# This is the whole point of the project: the numbers on the site are
+# never older than a few hours, and every one of them has a date and
+# a receipt.
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: keep-current
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Read every pricing page we can reach
+        run: node tools/auto-update.mjs --concurrency=12
+
+      - name: Refresh the income series
+        run: node tools/pull-income.mjs
+
+      - name: Rebuild the wire from the history
+        run: node tools/make-changes.mjs
+
+      - name: Build
+        run: node src/build.mjs
+
+      - name: Check the data
+        run: node tools/check.mjs
+
+      - name: Commit what changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data site
+          git diff --staged --quiet || git commit -m "auto: prices re-read $(date -u +%Y-%m-%d)"
+          git push || true
+
+      - name: Raise an issue for the prices it could not read
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node - <<'EOF'
+          const fs = require("fs");
+          const a = JSON.parse(fs.readFileSync("data/alerts.json", "utf8"));
+          const open = (a.alerts || []).filter((x) => x.status !== "resolved" && x.type === "needs-a-human");
+          if (!open.length) { console.log("nothing needs a human"); process.exit(0); }
+
+          const byKey = {};
+          for (const x of open) {
+            const k = `${x.service}/${x.market}${x.plan ? "/" + x.plan : ""}`;
+            (byKey[k] = byKey[k] || []).push(x);
+          }
+          const lines = Object.entries(byKey).slice(0, 40).map(([k, xs]) =>
+            `- **${k}** — ${xs[0].note}`
+          ).join("\n");
+
+          const body = `The machine could not read these prices with enough confidence to publish them.\n\n${lines}\n\n` +
+            "Each one needs a person to open the page, find the standing monthly price, and update the row in `data/prices.json` " +
+            "(price, history, `verified` date, receipt), then run `node tools/make-changes.mjs && node src/build.mjs`.\n\n" +
+            "To clear an alert after fixing it, set its `status` to `resolved` in `data/alerts.json`.";
+
+          const { execFileSync } = require("child_process");
+          const title = `${Object.keys(byKey).length} price(s) need a human`;
+          const existing = execFileSync("gh", ["issue", "list", "--label", "price-alert", "--state", "open", "--json", "number,title"], { encoding: "utf8" });
+          const open_ = JSON.parse(existing || "[]");
+          const match = open_.find((i) => i.title === title);
+          if (match) {
+            console.log("issue already open:", match.number);
+          } else {
+            execFileSync("gh", ["issue", "create", "--title", title, "--body", body, "--label", "price-alert"], { stdio: "inherit" });
+          }
+          EOF
+
+      - name: Summarise
+        run: |
+          {
+            echo "### Prices re-read"
+            echo
+            echo "- verified prices: $(node -e 'console.log(JSON.parse(require("fs").readFileSync("data/prices.json","utf8")).rows.length)')"
+            echo "- open alerts: $(node -e 'console.log(JSON.parse(require("fs").readFileSync("data/alerts.json","utf8")).alerts.filter(a=>a.status!=="resolved").length)')"
+            echo "- last run: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -45,6 +45,67 @@ export function renderHome(ctx) {
     <div class="stat"><div class="n">${num(cov.points)}</div><div class="l">${escapeHtml(t("home.statPoints"))}</div></div>
   </div>`;
 
+  /* --- the flagship: one service, every market, ranked --- */
+  const coverage = activeServices
+    .map((sid) => {
+      const svc = services[sid];
+      const srows = data.rowsForService(sid);
+      const planId = flagshipPlan(svc, srows);
+      const items = srows
+        .filter((r) => r.plan === planId)
+        .map((r) => ({
+          mid: r.market,
+          value: eci(r.price, data.incomeFor(r.market)),
+          row: r,
+          global: r.pricedFor === "global",
+        }))
+        .filter((x) => x.value != null)
+        .sort((a, b) => b.value - a.value);
+      return { sid, svc, planId, items };
+    })
+    .filter((x) => x.items.length >= 5)
+    .sort((a, b) => b.items.length - a.items.length);
+
+  const lead = coverage[0];
+
+  const leadChart = lead
+    ? `<div class="chartbox">${barChart(
+        lead.items.slice(0, 16).map((x) => ({
+          label: `${data.markets[x.mid].nameLocal[locale] || data.markets[x.mid].name}${x.global ? " *" : ""}`,
+          value: x.value,
+        })),
+        {
+          title: t("home.flagTitle"),
+          valueFmt: (v) => num(v.toFixed(2)) + "%",
+          left: 190,
+        }
+      )}</div>`
+    : "";
+
+  const leadTable = lead
+    ? `<div class="tablewrap"><table class="rows">
+        <thead><tr>
+          <th>${escapeHtml(t("home.colMarket"))}</th>
+          <th>${escapeHtml(t("home.colPrice"))}</th>
+          <th>${escapeHtml(t("home.colShare"))}</th>
+          <th>${escapeHtml(t("pair.colVerified"))}</th>
+        </tr></thead>
+        <tbody>${lead.items
+          .map(
+            (x) => `<tr>
+            <td class="rowhead"><a href="${escapeHtml(pairPath(x.row.service, x.mid, locale))}">${escapeHtml(data.markets[x.mid].nameLocal[locale] || data.markets[x.mid].name)}</a></td>
+            <td class="num">${priceCell(x.row, locale)}</td>
+            <td class="num"><span class="eci ${band(x.value).cls}">${num(x.value.toFixed(2))}%</span></td>
+            <td>${verifiedBadge(t, x.row)}</td>
+          </tr>`
+          )
+          .join("")}</tbody>
+      </table></div>`
+    : "";
+
+  const leadWorst = lead && lead.items[0];
+  const leadBest = lead && lead.items[lead.items.length - 1];
+
   /* --- matrix table --- */
   const matrix = activeServices.length
     ? `<div class="tablewrap"><table class="matrix">
@@ -122,6 +183,31 @@ export function renderHome(ctx) {
     <p class="lede">${escapeHtml(SITE.tagline[locale] || SITE.tagline.en)}</p>
     ${statRow}
   </section>
+
+  ${
+    lead
+      ? `<div class="section-h"><h2>${escapeHtml(
+          t("home.leadTitle", { service: lead.svc.name, plan: planLabel(t, lead.planId) })
+        )}</h2>
+        <a class="small" href="${escapeHtml(servicePath(lead.sid, locale))}">${escapeHtml(t("common.readMore"))} →</a></div>
+       ${
+         leadWorst && leadBest && leadWorst.value > 0
+           ? `<p class="lede-small">${escapeHtml(
+               t("home.leadLede", {
+                 dear: data.markets[leadWorst.mid].nameLocal[locale] || data.markets[leadWorst.mid].name,
+                 dearShare: num(leadWorst.value.toFixed(2)),
+                 cheap: data.markets[leadBest.mid].nameLocal[locale] || data.markets[leadBest.mid].name,
+                 cheapShare: num(leadBest.value.toFixed(2)),
+                 times: num((leadWorst.value / leadBest.value).toFixed(1)),
+               })
+             )}</p>`
+           : ""
+       }
+       ${leadChart}
+       ${leadTable}
+       <p class="small faint">${escapeHtml(t("home.starNote"))}</p>`
+      : ""
+  }
 
   <div class="section-h"><h2>${escapeHtml(t("home.flagTitle"))}</h2></div>
   ${matrix}

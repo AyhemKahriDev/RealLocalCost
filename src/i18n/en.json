@@ -6,7 +6,10 @@
     "services": "Services",
     "servicesLede": "Every service we track, and the markets we have verified it in.",
     "markets": "Markets",
-    "marketsLede": "Every market we price, and what a month of per-capita income is there."
+    "marketsLede": "Every market we price, and what a month of per-capita income is there.",
+    "localises": "Who localises?",
+    "cheapest": "Cheapest to watch",
+    "calculator": "Calculator"
   },
   "footer": {
     "tagline": "What digital services actually cost, where you live, as a share of what people earn there.",
@@ -53,7 +56,13 @@
     "methodTitle": "How this is measured",
     "methodLede": "One number, one formula, no black box.",
     "dataTitle": "Take the data",
-    "dataLede": "The whole dataset, free, with sources. Use it, cite it, check it."
+    "dataLede": "The whole dataset, free, with sources. Use it, cite it, check it.",
+    "home.leadTitle": "{service} ({plan}), in every market we have priced",
+    "home.leadLede": "In {dear} it costs {dearShare}% of a month's income. In {cheap} it costs {cheapShare}%. {times} times the difference, for the same subscription.",
+    "home.starNote": "* The service does not price for that market: the same price is charged everywhere, converted at the official exchange rate.",
+    "leadTitle": "{service} ({plan}), in every market we have priced",
+    "leadLede": "In {dear} it costs {dearShare}% of a month's income. In {cheap} it costs {cheapShare}%. {times} times the difference, for the same subscription.",
+    "starNote": "* The service does not price for that market: the same price is charged everywhere, converted at the official exchange rate."
   },
   "service": {
     "title": "{service} prices, market by market",
@@ -116,7 +125,10 @@
     "changeFlat": "unchanged since {date}",
     "startsAt": "from",
     "historyOnce": "One price recorded so far. The chart fills in as more dated prices are verified.",
-    "discontinuedLede": "This plan is no longer offered here. The price shown is the last one we verified."
+    "discontinuedLede": "This plan is no longer offered here. The price shown is the last one we verified.",
+    "pair.ledeGlobal": "{service} quotes {price} here — the same price it charges everywhere. That is {local} in this market, or {share} of a month's income.",
+    "pair.notPricedHere": "Not priced for this market — the same price everywhere",
+    "pair.pricedHere": "Priced for this market"
   },
   "wire": {
     "title": "The wire",
@@ -221,5 +233,39 @@
     "yes": "yes",
     "no": "no",
     "skipToContent": "Skip to content"
+  },
+  "localises": {
+    "title": "Who prices for your market, and who does not?",
+    "lede": "Some services price in each market's own money. Others ship one price — usually in dollars — to everybody, and leave you to absorb the exchange rate. This is the difference, service by service.",
+    "verdict": "Verdict",
+    "verdictLocal": "Prices per market",
+    "verdictOnePrice": "One price everywhere",
+    "verdictMixed": "Mixed",
+    "localMarkets": "Local markets",
+    "globalMarkets": "Global-price markets",
+    "spread": "Spread",
+    "spreadTitle": "How far the price gap runs, best market to worst",
+    "currencies": "Currencies seen",
+    "statLocal": "price per market",
+    "statGlobal": "one price for all",
+    "statTracked": "services tracked",
+    "globalTitle": "Charging everyone the same price",
+    "globalLede": "These services quote the same number in every market we can read. The local cost is the exchange rate's decision, not the company's.",
+    "globalIn": "{count} markets get the global price",
+    "storyHead": "The same price, a different world",
+    "storyTitle": "{service} as a share of a month's income",
+    "storyLede": "{service} charges {quoted} — the same number everywhere. In {dear} that is {dearShare}% of a month's income. In {cheap} it is {cheapShare}%. {times} times the difference, for a price that never changed.",
+    "storyLede2": "The bars are each market's share of income. The service charges the same number in every one of them."
+  },
+  "calc": {
+    "title": "What does it cost where you live?",
+    "lede": "Pick a service and a market. You get the price in that market's own currency, and what that price is worth as a share of a month's income there.",
+    "service": "Service and market"
+  },
+  "cheapest": {
+    "title": "The cheapest way to watch, market by market",
+    "lede": "Every subscription we have verified, ranked by what it costs as a share of what people earn in that market. Cheapest first.",
+    "income": "A month of per-capita income",
+    "alternatives": "Local alternatives"
   }
 }

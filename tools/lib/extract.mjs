@@ -11,7 +11,7 @@
 /* ---------- digit normalisation ---------- */
 
 /* Arabic-Indic (٠-٩) and Extended Arabic-Indic (۰-۹) → ASCII */
-import { classify, DISTINCTIVE, AMBIGUOUS, KNOWN_CODES, containsSymbol } from "./currencies.mjs";
+import { classify, DISTINCTIVE, AMBIGUOUS, KNOWN_CODES, containsSymbol, DECIMAL_COMMA, DECIMAL_THREE } from "./currencies.mjs";
 
 const AR_DIGITS = /[٠-٩۰-۹]/g;
 const AR_DECIMAL = "٫";
@@ -34,9 +34,9 @@ export function normalizeDigits(input) {
  * Parse a human-formatted number. Handles "1,50" (EU), "1,299.00" (US),
  * "1 299" (fr-CH), "1.299" (de). Returns null when it is not a number.
  */
-export function parseNumber(raw) {
+export function parseNumber(raw, decimalComma = false, decimalThree = false) {
   if (raw == null) return null;
-  let s = normalizeDigits(raw).replace(/[\s  ]/g, "");
+  let s = normalizeDigits(raw).replace(/[\s\u00a0\u202f]/g, "");
   s = s.replace(/[^\d.,\-+]/g, "");
   if (!s) return null;
 
@@ -47,28 +47,37 @@ export function parseNumber(raw) {
   const lastComma = s.lastIndexOf(",");
 
   if (lastDot >= 0 && lastComma >= 0) {
-    // The rightmost separator is the decimal one.
-    const dec = Math.max(lastDot, lastComma);
+    /* Both separators: the rightmost is the decimal one, the other is
+       a thousands separator. Drop the thousands one, then whatever is
+       left is the decimal point. */
     const thou = Math.min(lastDot, lastComma);
-    if (thou > 0) s = s.slice(0, thou) + s.slice(thou + 1);
-    s = s.slice(0, dec) + "." + s.slice(dec + 1);
+    s = (s.slice(0, thou) + s.slice(thou + 1)).replace(",", ".");
   } else if (lastComma >= 0) {
-    const tail = s.length - lastComma - 1;
-    // "1,50" → decimal.  "1,500" → thousands.  "1,234,567" → thousands.
     const groups = s.split(",");
-    const allGroups3 = groups.slice(1).every((g) => g.length === 3);
-    s = tail === 3 && (groups.length > 2 || allGroups3) && groups.length > 2
-      ? groups.join("")
-      : allGroups3 && groups.length > 2
-        ? groups.join("")
-        : s.replace(",", ".");
-    if (groups.length > 2) s = groups.join("");
-    else if (tail === 3) s = groups.join("");
+    if (groups.length > 2) {
+      /* "1,234,567" is always a thousands separator. */
+      s = groups.join("");
+    } else if (decimalComma && !decimalThree && groups[1].length !== 3) {
+      /* In a comma-decimal market, "4,95" is four dollars ninety-five.
+         Reading it the other way turns a five-dollar plan into a
+         five-thousand-dollar one. */
+      s = s.replace(",", ".");
+    } else {
+      /* "4,950" is four thousand nine hundred and fifty. */
+      s = groups.join("");
+    }
   } else if (lastDot >= 0) {
-    const tail = s.length - lastDot - 1;
     const groups = s.split(".");
-    if (groups.length > 2) s = groups.join("");
-    else if (tail === 3) s = groups.join("");
+    if (groups.length > 2) {
+      s = groups.join("");
+    } else if (decimalThree && groups[1].length === 3) {
+      /* "1.125" is one dinar and a quarter: this currency is quoted in
+         thousandths. */
+      s = s;
+    } else if (decimalComma && groups[1].length === 3) {
+      /* In a comma-decimal market a dot is a thousands separator. */
+      s = groups.join("");
+    }
   }
 
   const n = Number(s);
@@ -118,6 +127,8 @@ export const PLAN_KEYWORDS = {
   free: ["free", "gratuit", "مجاني"],
 };
 
+/* The canonical plan id, unless a service names its plans differently.
+   A plan id with no entry here is still a plan id. */
 const PLAN_ALIASES = {
   individual: "individual",
   duo: "duo",
@@ -164,7 +175,7 @@ export function guessPlanWithDistance(context, numPos, window = 90, planIds = nu
         const centre = idx + w.length / 2;
         const dist = Math.abs(centre - numPos);
         if (dist <= window && (!best || dist < best.dist)) {
-          best = { plan: PLAN_ALIASES[plan], dist };
+          best = { plan: PLAN_ALIASES[plan] || plan, dist };
         }
         idx = text.indexOf(w, idx + 1);
       }
@@ -181,15 +192,25 @@ export function guessPlan(context, window = 70, planIds = null) {
 
 
 /* Every plan name in the text, in reading order. */
-function namesInOrder(text, planIds) {
+function namesInOrder(text, planIds, extra) {
   const lower = text.toLowerCase();
   const out = [];
-  for (const [plan, words] of Object.entries(PLAN_KEYWORDS)) {
+  /* Each service names its plans its own way — Notion says "Plus" and
+     "Business", Apple says "Standard" and "Platinum". The service
+     declares those names, and they are added to the shared ones. */
+  const table = Object.entries(PLAN_KEYWORDS);
+  if (extra) {
+    for (const [plan, words] of Object.entries(extra)) {
+      if (planIds && !planIds.includes(plan)) continue;
+      table.push([plan, words]);
+    }
+  }
+  for (const [plan, words] of table) {
     if (planIds && !planIds.includes(plan)) continue;
     for (const w of words) {
       let idx = lower.indexOf(w);
       while (idx !== -1) {
-        out.push({ plan: PLAN_ALIASES[plan], pos: idx, centre: idx + w.length / 2 });
+        out.push({ plan: PLAN_ALIASES[plan] || plan, pos: idx, centre: idx + w.length / 2 });
         idx = lower.indexOf(w, idx + 1);
       }
     }
@@ -308,8 +329,16 @@ export function extractPrices(html, opts = {}) {
   const marketObj = typeof opts.market === "object" && opts.market ? opts.market : null;
   const marketCode = marketObj ? marketObj.code : (opts.market || "");
   const currency = marketObj ? marketObj.currency : (opts.currency || "USD");
-  const { planIds = null, currencySymbols = [] } = opts;
+  const { planIds = null, currencySymbols = [], planNames = null } = opts;
   const aliases = marketObj ? marketObj.aliases : null;
+  const symbolIsAmbiguous = marketObj ? !!marketObj.symbolIsAmbiguous : false;
+  const primaryLang = marketObj ? marketObj.primaryLang : null;
+  const pageLanguage = opts.pageLang || null;
+  /* "4,950" is 4,95 in Tunis and 4,950 in Chicago. The market decides.
+     The general rule is that three digits after a separator is a
+     thousands separator; these two sets are the exceptions. */
+  const decimalComma = DECIMAL_COMMA.has(currency);
+  const decimalThree = DECIMAL_THREE.has(currency);
   const ownSymbol = marketObj ? marketObj.symbol : null;
   const syms = [
     ...new Set([
@@ -328,10 +357,9 @@ export function extractPrices(html, opts = {}) {
   const results = [];
   const seen = new Set();
 
-  const add = (raw, context, numPos, assignment, dist, before = "", after = "") => {
-    const value = parseNumber(raw);
+  const add = (raw, context, numPos, assignment, dist, before = "", after = "", cur = null) => {
+    const value = parseNumber(raw, decimalComma, decimalThree);
     if (value == null || value <= 0 || value > 100000) return;
-    const cur = detectCurrency(context, { currency, symbol: ownSymbol, aliases });
     const g = assignment ? { plan: assignment.plan, dist } : null;
     const key = `${value}|${cur}|${g ? g.plan : ""}`;
     if (seen.has(key)) return;
@@ -365,7 +393,7 @@ export function extractPrices(html, opts = {}) {
     let mm;
     while ((mm = re2.exec(s))) {
       const around = s.slice(Math.max(0, mm.index - 400), mm.index + 60);
-      const val = parseNumber(mm[1]);
+      const val = parseNumber(mm[1], decimalComma, decimalThree);
       if (val == null || val <= 0) continue;
       const cur = detectCurrency(mm[1], { currency, symbol: ownSymbol, aliases });
       /* The price sits inside the JSON, so the words around it are the
@@ -408,16 +436,41 @@ export function extractPrices(html, opts = {}) {
   return results;
 
   function scan(text) {
-    /* Pass 1 — every price in the text, with its position. */
-    const hits = [];
+    /* Pass 1 — every number in the text, with its position. */
+    const all = [];
     let mm;
     re.lastIndex = 0;
     while ((mm = re.exec(text))) {
       const raw = mm[1] || mm[2];
       if (!raw) continue;
-      const value = parseNumber(raw);
+      const value = parseNumber(raw, decimalComma, decimalThree);
       if (value == null || value <= 0 || value > 100000) continue;
-      hits.push({ raw, value, pos: mm.index + mm[0].indexOf(raw) });
+      all.push({ raw, value, pos: mm.index + mm[0].indexOf(raw) });
+    }
+    if (!all.length) return;
+
+    /* Pass 1b — keep only the numbers that carry a currency, and read
+       it from right next to the number. A stray "1 of 9" that inherits
+       the dollar sign from the price above it is not a price, and it
+       must not take a plan name away from the price that really has
+       one. */
+    const hits = [];
+    for (const h of all) {
+      const ctxStart = Math.max(0, h.pos - 160);
+      const ctxEnd = Math.min(text.length, h.pos + 120);
+      const context = text.slice(ctxStart, ctxEnd);
+      const numPos = h.pos - ctxStart;
+      const tight = context.slice(Math.max(0, numPos - 26), numPos + 26);
+      const cur = detectCurrency(tight, {
+          currency,
+          symbol: ownSymbol,
+          aliases,
+          symbolIsAmbiguous,
+          primaryLang,
+          pageLang: pageLanguage,
+        });
+      if (!cur) continue;
+      hits.push({ ...h, cur, context, numPos });
     }
     if (!hits.length) return;
 
@@ -432,15 +485,12 @@ export function extractPrices(html, opts = {}) {
 
        The greedy nearest-neighbour version of this gets it wrong on
        exactly the pages that matter. This does not. */
-    const names = namesInOrder(text, planIds);
+    const names = namesInOrder(text, planIds, planNames);
     const assignment = assignMonotonic(names, hits, NAME_MAX_DISTANCE);
 
     /* Pass 4 — build the candidates. */
     for (const h of hits) {
       const a = assignment.get(h.pos);
-      const ctxStart = Math.max(0, h.pos - 160);
-      const ctxEnd = Math.min(text.length, h.pos + 120);
-      const context = text.slice(ctxStart, ctxEnd);
       /* The words immediately before a number say what it is ("for 6
          months, 22,50 MAD"); the words immediately after say what
          happens next ("45 MAD/mois ensuite" — and then). Keeping the
@@ -448,7 +498,7 @@ export function extractPrices(html, opts = {}) {
          promotional one. */
       const before = text.slice(Math.max(0, h.pos - 110), h.pos);
       const after = text.slice(h.pos, Math.min(text.length, h.pos + 32));
-      add(h.raw, context, h.pos - ctxStart, a && !a.ambiguous ? a : null, a ? a.dist : null, before, after);
+      add(h.raw, h.context, h.numPos, a && !a.ambiguous ? a : null, a ? a.dist : null, before, after, h.cur);
     }
   }
 }

@@ -754,10 +754,13 @@
         "en",
         "fr"
       ],
-      "aliases": {
-        "$": "ARS"
+      "tld": "com.ar",
+      "note": {
+        "en": "Argentina has several exchange rates. The World Bank's official rate is used throughout, and it is not always the rate a reader actually pays. Treat the Argentine figures as the official reckoning, not the street rate.",
+        "fr": "L'Argentine a plusieurs taux de change. C'est le taux officiel de la Banque mondiale qui est utilisé ici, et ce n'est pas toujours le taux que paie réellement le lecteur. Considérez les chiffres argentins comme le calcul officiel, pas le taux du marché.",
+        "ar": "في الأرجنتين عدة أسعار صرف. يُستخدم هنا سعر البنك الدولي الرسمي، وهو ليس دائماً السعر الذي يدفعه القارئ فعلاً. اعتبر الأرقام الأرجنتينية الحساب الرسمي لا سعر السوق."
       },
-      "tld": "com.ar"
+      "symbolIsAmbiguous": true
     },
     "cl": {
       "name": "Chile",
@@ -767,7 +770,7 @@
         "ar": "تشيلي"
       },
       "currency": "CLP",
-      "symbol": "CLP$",
+      "symbol": "$",
       "wb": "CHL",
       "cc": "cl",
       "dir": "ltr",
@@ -776,7 +779,8 @@
         "en",
         "ar"
       ],
-      "tld": "cl"
+      "tld": "cl",
+      "symbolIsAmbiguous": true
     },
     "co": {
       "name": "Colombia",
@@ -786,7 +790,7 @@
         "ar": "كولومبيا"
       },
       "currency": "COP",
-      "symbol": "COL$",
+      "symbol": "$",
       "wb": "COL",
       "cc": "co",
       "dir": "ltr",
@@ -795,7 +799,8 @@
         "en",
         "ar"
       ],
-      "tld": "com.co"
+      "tld": "com.co",
+      "symbolIsAmbiguous": true
     },
     "pe": {
       "name": "Peru",
@@ -843,7 +848,7 @@
         "ar": "المكسيك"
       },
       "currency": "MXN",
-      "symbol": "MX$",
+      "symbol": "$",
       "wb": "MEX",
       "cc": "mx",
       "dir": "ltr",
@@ -852,7 +857,8 @@
         "en",
         "ar"
       ],
-      "tld": "com.mx"
+      "tld": "com.mx",
+      "symbolIsAmbiguous": true
     },
     "ke": {
       "name": "Kenya",
@@ -1119,25 +1125,6 @@
         "ar"
       ],
       "tld": "com.hk"
-    },
-    "tw": {
-      "name": "Taiwan",
-      "nameLocal": {
-        "en": "Taiwan",
-        "fr": "Taïwan",
-        "ar": "تايوان"
-      },
-      "currency": "TWD",
-      "symbol": "NT$",
-      "wb": "TWN",
-      "cc": "tw",
-      "dir": "ltr",
-      "langs": [
-        "zh",
-        "en",
-        "ar"
-      ],
-      "tld": "com.tw"
     },
     "jp": {
       "name": "Japan",

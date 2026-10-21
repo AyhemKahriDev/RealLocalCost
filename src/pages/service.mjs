@@ -167,6 +167,8 @@ export function renderMarket(ctx, marketId) {
         .join("")}</ul>`
     : `<p class="faint small">${escapeHtml(t("market.noData"))}</p>`;
 
+  const marketNote = m.note ? m.note[locale] || m.note.en : null;
+
   const incomePanel = income
     ? panel(
         t("market.incomeTitle"),
@@ -181,6 +183,7 @@ export function renderMarket(ctx, marketId) {
   <div class="breadcrumb"><a href="/">${escapeHtml(t("common.back"))} ${escapeHtml(t("common.index"))}</a> / ${escapeHtml(m.nameLocal[locale] || m.name)}</div>
   <h1>${escapeHtml(t("market.title", { market: m.nameLocal[locale] || m.name }))}</h1>
   <p class="lede">${escapeHtml(t("market.lede", { market: m.nameLocal[locale] || m.name }))}</p>
+  ${marketNote ? `<p class="market-note">${escapeHtml(marketNote)}</p>` : ""}
 
   <div class="two-col">
     ${panel(t("market.rankTitle"), `${table}<p class="small faint">${escapeHtml(t("market.rankLede"))}</p>`)}

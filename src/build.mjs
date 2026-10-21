@@ -23,6 +23,8 @@ import { renderService, renderMarket } from "./pages/service.mjs";
 import { renderPair } from "./pages/pair.mjs";
 import { renderMethod, renderWire, renderData } from "./pages/static.mjs";
 import { renderServices, renderMarkets } from "./pages/indexes.mjs";
+import { renderLocalises, renderCalculator } from "./pages/localises.mjs";
+import { renderCheapest } from "./pages/cheapest.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_DIR = join(ROOT, "site");
@@ -101,6 +103,9 @@ async function main() {
       ["data", renderData],
       ["services", renderServices],
       ["markets", renderMarkets],
+      ["localises", renderLocalises],
+      ["cheapest", renderCheapest],
+      ["calculator", renderCalculator],
     ]) {
       const rendered = fn(ctx);
       const alts = alternatesFor("page", { slug });

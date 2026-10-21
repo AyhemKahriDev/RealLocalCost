@@ -6,7 +6,10 @@
     "services": "Services",
     "servicesLede": "Chaque service que nous suivons, et les marchés où nous l'avons vérifié.",
     "markets": "Marchés",
-    "marketsLede": "Chaque marché que nous tarifons, et ce qu'y vaut un mois de revenu par habitant."
+    "marketsLede": "Chaque marché que nous tarifons, et ce qu'y vaut un mois de revenu par habitant.",
+    "localises": "Qui localise ?",
+    "cheapest": "Le moins cher",
+    "calculator": "Calculateur"
   },
   "footer": {
     "tagline": "Ce que les services numériques coûtent vraiment, chez vous, au regard de ce que les gens y gagnent.",
@@ -53,7 +56,13 @@
     "methodTitle": "Comment c'est mesuré",
     "methodLede": "Un seul chiffre, une seule formule, aucune boîte noire.",
     "dataTitle": "Prenez les données",
-    "dataLede": "Tout le jeu de données, gratuitement, avec ses sources. Utilisez-le, citez-le, vérifiez-le."
+    "dataLede": "Tout le jeu de données, gratuitement, avec ses sources. Utilisez-le, citez-le, vérifiez-le.",
+    "home.leadTitle": "{service} ({plan}), dans chaque marché que nous avons tarifé",
+    "home.leadLede": "À {dear}, cela coûte {dearShare}% d'un mois de revenu. À {cheap}, {cheapShare}%. {times} fois l'écart, pour le même abonnement.",
+    "home.starNote": "* Le service ne tarifе pas ce marché : le même prix partout, converti au taux de change officiel.",
+    "starNote": "* Ce service ne tarife pas ce marche : le meme prix partout, converti au taux de change officiel.",
+    "leadTitle": "{service} ({plan}), dans chaque marché que nous avons tarifé",
+    "leadLede": "À {dear}, cela coûte {dearShare}% d'un mois de revenu. À {cheap}, {cheapShare}%. {times} fois l'écart, pour le même abonnement."
   },
   "service": {
     "title": "Les prix de {service}, marché par marché",
@@ -116,7 +125,10 @@
     "changeFlat": "inchangé depuis {date}",
     "startsAt": "à partir de",
     "historyOnce": "Un seul prix enregistré pour l'instant. Le graphique se complète à mesure que des prix datés sont vérifiés.",
-    "discontinuedLede": "Cette offre n'est plus proposée ici. Le prix affiché est le dernier que nous avons vérifié."
+    "discontinuedLede": "Cette offre n'est plus proposée ici. Le prix affiché est le dernier que nous avons vérifié.",
+    "pair.ledeGlobal": "{service} affiche {price} ici — le même prix partout. Cela fait {local} sur ce marché, soit {share} d'un mois de revenu.",
+    "pair.notPricedHere": "Pas de prix pour ce marché — le même prix partout",
+    "pair.pricedHere": "Tarifé pour ce marché"
   },
   "wire": {
     "title": "Le fil",
@@ -221,5 +233,39 @@
     "yes": "oui",
     "no": "non",
     "skipToContent": "Aller au contenu"
+  },
+  "localises": {
+    "title": "Qui price pour votre marché, et qui ne le fait pas ?",
+    "lede": "Certains services tarifent dans la devise de chaque marché. D'autres shippent un seul prix — le plus souvent en dollars — à tout le monde, et vous laissent absorber le taux de change. Voici la différence, service par service.",
+    "verdict": "Verdict",
+    "verdictLocal": "Tarife par marché",
+    "verdictOnePrice": "Un prix partout",
+    "verdictMixed": "Mixte",
+    "localMarkets": "Marchés locaux",
+    "globalMarkets": "Marchés à prix global",
+    "spread": "Écart",
+    "spreadTitle": "De l'étendue de l'écart de prix, du marché le moins cher au plus cher",
+    "currencies": "Devises vues",
+    "statLocal": "prix par marché",
+    "statGlobal": "un prix pour tous",
+    "statTracked": "services suivis",
+    "globalTitle": "Le même prix pour tout le monde",
+    "globalLede": "Ces services affichent le même montant dans chaque marché que nous pouvons lire. Le coût local est la décision du taux de change, pas celle de l'entreprise.",
+    "globalIn": "{count} marchés ont le prix global",
+    "storyHead": "Le même prix, un monde différent",
+    "storyTitle": "{service} en part d'un mois de revenu",
+    "storyLede": "{service} facture {quoted} — le même montant partout. À {dear}, cela fait {dearShare}% d'un mois de revenu. À {cheap}, {cheapShare}%. {times} fois l'écart, pour un prix qui n'a pas changé.",
+    "storyLede2": "Chaque barre est la part du revenu d'un marché. Le service y facture le même montant."
+  },
+  "calc": {
+    "title": "Combien ça coûte chez vous ?",
+    "lede": "Choisissez un service et un marché. Vous obtenez le prix dans la devise de ce marché, et ce que ce prix vaut en part d'un mois de revenu.",
+    "service": "Service et marché"
+  },
+  "cheapest": {
+    "title": "Le moins cher à regarder, marché par marché",
+    "lede": "Chaque abonnement vérifié, classé selon ce qu'il coûte en part de ce que les gens gagnent dans ce marché. Le moins cher d'abord.",
+    "income": "Un mois de revenu par habitant",
+    "alternatives": "Alternatives locales"
   }
 }

@@ -24,8 +24,11 @@ export function layout(o) {
   ).join("\n    ");
 
   const nav = [
-    { href: pagePath("services", locale), label: t("nav.services") },
     { href: pagePath("markets", locale), label: t("nav.markets") },
+    { href: pagePath("services", locale), label: t("nav.services") },
+    { href: pagePath("localises", locale), label: t("nav.localises") },
+    { href: pagePath("cheapest", locale), label: t("nav.cheapest") },
+    { href: pagePath("calculator", locale), label: t("nav.calculator") },
     { href: pagePath("method", locale), label: t("nav.method") },
     { href: pagePath("wire", locale), label: t("nav.wire") },
     { href: pagePath("data", locale), label: t("nav.data") },

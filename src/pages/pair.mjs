@@ -23,6 +23,8 @@ export function renderPair(ctx, serviceId, marketId) {
   const b = band(flagEci);
 
   const priceText = formatPrice(flag.price, flag.currency, locale);
+  const isGlobal = flag.pricedFor === "global";
+  const quotedText = flag.quoted ? formatPrice(flag.quoted.price, flag.quoted.currency, locale) : null;
 
   /* reference market: the same plan in the cheapest market we track for
      this service, so the comparison is like-for-like */
@@ -154,6 +156,8 @@ export function renderPair(ctx, serviceId, marketId) {
         : t("pair.changeFlat", { date: formatDate(ch.from.date, locale) })
     : "";
 
+  const marketNote = m.note ? m.note[locale] || m.note.en : null;
+
   const body = `
   <div class="breadcrumb">
     <a href="/">${escapeHtml(t("common.index"))}</a> /
@@ -162,12 +166,29 @@ export function renderPair(ctx, serviceId, marketId) {
   </div>
 
   <h1>${escapeHtml(t("pair.title", { service: svc.name, market: m.nameLocal[locale] || m.name, price: priceText }))}</h1>
-  <p class="lede">${escapeHtml(t("pair.lede", { service: svc.name, market: m.nameLocal[locale] || m.name, price: priceText, share: num(flagEci != null ? flagEci.toFixed(2) : "—") + "%" }))}</p>
+  <p class="lede">${escapeHtml(
+    isGlobal
+      ? t("pair.ledeGlobal", {
+          service: svc.name,
+          market: m.nameLocal[locale] || m.name,
+          price: quotedText,
+          local: priceText,
+          share: num(flagEci != null ? flagEci.toFixed(2) : "—") + "%",
+        })
+      : t("pair.lede", { service: svc.name, market: m.nameLocal[locale] || m.name, price: priceText, share: num(flagEci != null ? flagEci.toFixed(2) : "—") + "%" })
+  )}</p>
+
+  ${marketNote ? `<p class="market-note">${escapeHtml(marketNote)}</p>` : ""}
 
   <div class="hero-stat">
     <div class="hs-num ${b.cls}">${num(flagEci != null ? flagEci.toFixed(2) : "—")}<span class="hs-unit">%</span></div>
     <div class="hs-side">
       <div class="hs-band ${b.cls}">${escapeHtml(t(`band.${b.key}`))} · ${escapeHtml(t("pair.shareHeadline"))}</div>
+      ${
+        isGlobal
+          ? `<div class="hs-verdict global">${escapeHtml(t("pair.notPricedHere", { quoted: quotedText }))}</div>`
+          : `<div class="hs-verdict local">${escapeHtml(t("pair.pricedHere"))}</div>`
+      }
       ${incomeLine ? `<div class="hs-line">${escapeHtml(incomeLine)}</div>` : ""}
       ${refLine ? `<div class="hs-line">${escapeHtml(refLine)}</div>` : ""}
       ${changeLine ? `<div class="hs-line">${escapeHtml(changeLine)}</div>` : ""}

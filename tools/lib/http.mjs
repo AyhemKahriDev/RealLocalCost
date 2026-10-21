@@ -142,3 +142,14 @@ export async function cdxByYear(prefix, { fromYear = 2021, toYear = new Date().g
   );
   return chunks.flat();
 }
+
+/**
+ * The language the page itself declares. On a page that writes prices
+ * with a bare "$", this is what says whether the dollars are American
+ * or Argentine: the Argentine storefront is in Spanish, the American
+ * one is in English.
+ */
+export function pageLang(html) {
+  const m = String(html || "").match(/<html[^>]*\blang=["']([a-zA-Z-]+)["']/i);
+  return m ? m[1].toLowerCase() : null;
+}

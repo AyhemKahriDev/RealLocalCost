@@ -137,6 +137,13 @@ p { color: var(--dim); }
 .hs-band.a { color: var(--amber); } .hs-band.r { color: var(--red); }
 .hs-band.faint { color: var(--faint); }
 .hs-line { color: var(--dim); font-size: 13.5px; margin-top: 4px; }
+.hs-verdict {
+  display: inline-block; margin-top: 7px; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px;
+  border-radius: 3px; border: 1px solid var(--border);
+}
+.hs-verdict.local { color: var(--teal); border-color: rgba(61, 219, 217, 0.4); }
+.hs-verdict.global { color: var(--amber); border-color: rgba(245, 165, 36, 0.4); }
 
 /* ---------- tables ---------- */
 .tablewrap { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
@@ -218,10 +225,63 @@ table.method-t th { background: var(--panel2); font-size: 10.5px; text-transform
 .dl span { display: block; color: var(--dim); font-size: 13px; margin-top: 4px; }
 .dl code { display: inline-block; margin-top: 10px; font-family: var(--mono); font-size: 12px; color: var(--teal); }
 
+
+/* ---------- who localises ---------- */
+.chip.t { color: var(--teal); border-color: rgba(61, 219, 217, 0.4); }
+.localises-verdict { font-size: 13px; }
+
+/* ---------- the story: one price, many worlds ---------- */
+.story {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  padding: 20px 22px; margin-bottom: 4px;
+}
+.story-lede { font-size: 17px; color: var(--text); max-width: 62ch; line-height: 1.5; }
+.story .chartbox { margin-top: 16px; }
+
+/* ---------- the calculator ---------- */
+.calc {
+  background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+  padding: 20px; max-width: 720px;
+}
+.calc-controls { margin-bottom: 16px; }
+.calc-controls label {
+  display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--faint); margin-bottom: 6px;
+}
+.calc-controls select {
+  width: 100%; background: var(--panel2); border: 1px solid var(--border); color: var(--text);
+  padding: 10px 12px; border-radius: 6px; font-size: 14.5px; font-family: inherit; outline: none;
+}
+.calc-controls select:focus { border-color: var(--blue); }
+.calc-out { min-height: 96px; }
+.calc-price { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+.calc-price .mono { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; }
+.calc-eci { font-family: var(--mono); font-size: 34px; font-weight: 800; letter-spacing: -0.03em; }
+.calc-eci.g { color: var(--green); } .calc-eci.t { color: var(--teal); }
+.calc-eci.a { color: var(--amber); } .calc-eci.r { color: var(--red); }
+.calc-band { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+.calc-band.g { color: var(--green); } .calc-band.t { color: var(--teal); }
+.calc-band.a { color: var(--amber); } .calc-band.r { color: var(--red); }
+.calc-note { font-size: 13px; margin-top: 8px; }
+.calc-share { margin-top: 12px; word-break: break-all; }
+
+/* ---------- cheapest, market by market ---------- */
+.cheapest-block { margin: 34px 0; }
+.cb-head { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+.cb-head h2 { margin: 0 0 8px; }
+.cb-income { color: var(--faint); font-size: 12.5px; }
+.alt-line { margin-top: 8px; }
+.alt-line a { margin-inline-end: 6px; }
+
 /* ---------- misc ---------- */
 .breadcrumb { font-size: 13px; margin-bottom: 14px; color: var(--faint); }
 .breadcrumb a { color: var(--dim); }
 .lede { max-width: 720px; font-size: 16px; }
+.market-note {
+  max-width: 720px; font-size: 13.5px; color: var(--amber);
+  border-inline-start: 2px solid rgba(245, 165, 36, 0.5);
+  padding-inline-start: 12px; margin: 14px 0 4px;
+}
 .formula { background: var(--panel2); border: 1px solid var(--border); border-radius: 6px; padding: 14px; overflow-x: auto; }
 .formula pre { margin: 0; font: 12.5px/1.6 var(--mono); color: var(--dim); white-space: pre-wrap; }
 .formula b { color: var(--text); }

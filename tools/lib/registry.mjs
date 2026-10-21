@@ -35,6 +35,8 @@ export function marketObj(reg, code) {
     currency: m.currency,
     symbol: m.symbol,
     aliases: m.aliases || null,
+    symbolIsAmbiguous: !!m.symbolIsAmbiguous,
+    primaryLang: (m.langs && m.langs[0]) || null,
     cc: m.cc,
     name: m.name,
   };

@@ -20,6 +20,7 @@
 
 /** Symbols that only one currency uses — safe to match anywhere. */
 export const DISTINCTIVE = {
+  USD: ["US$", "USD"],
   EUR: ["€"],
   GBP: ["£"],
   JPY: ["¥", "￥"],
@@ -170,22 +171,36 @@ export function classify(token, market = {}) {
   const codeMatch = t.match(/\b([A-Z]{3})\b/);
   if (codeMatch && KNOWN_CODES.has(codeMatch[1])) return codeMatch[1];
 
-  /* 2. The market's own symbol. "kr" in Sweden is SEK; "kr" in
-        Denmark is DKK, and the market already knows which it is. */
-  const own = market.symbol;
-  if (own && containsSymbol(t, own)) return market.currency;
-
-  /* 3. A symbol the market has explicitly claimed. */
-  if (market.aliases) {
-    for (const [sym, code] of Object.entries(market.aliases)) {
+  /* 2. A symbol only one currency uses. This comes before the
+        market's own claim on purpose: "US$20" must not be read as
+        twenty Argentine pesos, because the Argentine storefront
+        writes pesos with a bare "$" and the two look alike. */
+  for (const [code, syms] of Object.entries(DISTINCTIVE)) {
+    if (!KNOWN_CODES.has(code)) continue;
+    for (const sym of syms) {
       if (containsSymbol(t, sym)) return code;
     }
   }
 
-  /* 4. A symbol only one currency uses. */
-  for (const [code, syms] of Object.entries(DISTINCTIVE)) {
-    if (!KNOWN_CODES.has(code)) continue;
-    for (const sym of syms) {
+  /* 3. The market's own symbol. "kr" in Sweden is SEK; "kr" in
+        Denmark is DKK, and the market already knows which it is.
+        A market whose symbol is a bare "$" says so with
+        symbolIsAmbiguous: on an English page a "$" is a dollar. The
+        local currency wins only when the page is written in the
+        market's own language — the Argentine storefront is in
+        Spanish and writes pesos as "$ 4.499". */
+  const own = market.symbol;
+  let ownWins = true;
+  if (market.symbolIsAmbiguous && own === "$") {
+    const primary = market.primaryLang;
+    const lang = market.pageLang;
+    ownWins = !!(primary && lang && (lang === primary || lang.startsWith(primary + "-")));
+  }
+  if (own && ownWins && containsSymbol(t, own)) return market.currency;
+
+  /* 4. A symbol the market has explicitly claimed. */
+  if (market.aliases) {
+    for (const [sym, code] of Object.entries(market.aliases)) {
       if (containsSymbol(t, sym)) return code;
     }
   }
@@ -202,3 +217,33 @@ export function classify(token, market = {}) {
   /* 6. Nothing found: unknown. Not a guess. */
   return null;
 }
+
+/**
+ * Currencies that write a comma for the decimal point, and currencies
+ * that use three decimal places.
+ *
+ * The general rule is the universal one: THREE digits after a
+ * separator means thousands, one or two means a decimal point. That
+ * handles "12,50" (twelve fifty) and "4.950" (four thousand nine
+ * hundred and fifty, Chilean pesos) with the same code.
+ *
+ * These two sets are the exceptions:
+ *   DECIMAL_COMMA — the page writes 12,50 and the market reads it that
+ *                   way, even when a bare three-digit group would
+ *                   normally be thousands.
+ *   DECIMAL_THREE — the currency is quoted in thousandths, so 1.125
+ *                   really is one point one two five.
+ */
+export const DECIMAL_COMMA = new Set([
+  "EUR", "EGP", "TND", "MAD", "DZD", "SAR", "AED", "QAR", "KWD", "OMR",
+  "JOD", "IQD", "TRY", "BRL", "CLP", "COP", "PEN", "PKR", "LKR", "NGN",
+  "KES", "ZAR", "IDR", "PHP", "VND", "THB", "MYR", "INR", "PLN", "CZK",
+  "HUF", "RON", "UAH", "ILS", "ARS", "KZT", "UZS", "CRC", "GTQ", "HNL",
+  "PAB", "DOP", "BOB", "PYG", "VES", "XOF", "XAF", "RWF", "BIF", "DJF",
+  "GNF", "MGA", "MUR", "SYP", "IQD", "LYD", "SDG", "LBP",
+]);
+
+export const DECIMAL_THREE = new Set([
+  "BHD", "KWD", "OMR", "JOD", "IQD", "JSD", "KMF", "DJF", "GNF", "VUV",
+  "XAF", "XOF", "XPF", "LYD", "DJF",
+]);

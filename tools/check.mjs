@@ -63,7 +63,18 @@ for (const [i, r] of rows.entries()) {
 
   if (typeof r.price !== "number" || !Number.isFinite(r.price)) err(`${at}: price is not a number`);
   else if (r.price <= 0) err(`${at}: price is not positive`);
-  else if (r.price > 100000) err(`${at}: price looks wrong (${r.price})`);
+  else {
+    /* A ceiling in dollars would be wrong: one dollar is sixteen
+       thousand rupiah. The only meaningful ceiling is the one that
+       matters — a subscription nobody could afford. */
+    const inc = (incomeRaw.markets || {})[r.market];
+    const monthly = inc && inc.latest ? inc.latest.monthly : null;
+    if (monthly && r.price > monthly * 500) {
+      err(`${at}: price is ${r.price} ${r.currency} — over 500 months of income (${monthly})`);
+    } else if (!monthly && r.price > 100000) {
+      err(`${at}: price looks wrong (${r.price})`);
+    }
+  }
 
   if (!r.currency) err(`${at}: no currency`);
   else if (r.currency !== markets[r.market]?.currency) {
