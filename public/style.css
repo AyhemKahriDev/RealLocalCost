@@ -170,6 +170,12 @@ table.method-t th { background: var(--panel2); font-size: 10.5px; text-transform
 .axis-v { fill: var(--dim); }
 .gridline { stroke: var(--border); stroke-width: 1; }
 
+/* ---------- notes under a table ---------- */
+.notes { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 10px; }
+.notes p { margin: 0 0 6px; }
+.notes p:last-child { margin-bottom: 0; }
+.notes b { color: var(--text); }
+
 /* ---------- kv rows ---------- */
 .kv { display: flex; justify-content: space-between; gap: 14px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; }
 .kv:last-of-type { border-bottom: none; }

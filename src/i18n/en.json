@@ -15,7 +15,8 @@
   },
   "badge": {
     "verified": "verified",
-    "unverified": "unverified"
+    "unverified": "unverified",
+    "discontinued": "withdrawn"
   },
   "method": {
     "title": "Method",
@@ -115,7 +116,8 @@
     "changeDown": "down {pct}% since {date}",
     "changeFlat": "unchanged since {date}",
     "startsAt": "from",
-    "historyOnce": "One price recorded so far. The chart fills in as more dated prices are verified."
+    "historyOnce": "One price recorded so far. The chart fills in as more dated prices are verified.",
+    "discontinuedLede": "This plan is no longer offered here. The price shown is the last one we verified."
   },
   "wire": {
     "title": "The wire",

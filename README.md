@@ -30,6 +30,20 @@ The same subscription costs a Tunisian **3.3×** what it costs a French person, 
 what they earn. The nominal prices are close; the affordability gap is threefold. That gap is
 invisible to every price-comparison site, and it is the whole point of this one.
 
+| Service | Plan | Market | Price | ECI |
+|---|---|---|---|---|
+| Spotify Premium | Individual | France | 12,14 € | **0.33%** |
+| Spotify Premium | Individual | Saudi Arabia | 23.99 ر.س | **0.22%** |
+| Apple TV+ | Standard | France | 9,99 € | **0.27%** |
+| Apple TV+ | Standard | Egypt | 49.99 ج.م | **0.41%** |
+| Spotify Premium | Individual | Egypt | 79 ج.م | **0.65%** |
+| Spotify Premium | Individual | Tunisia | 12.50 DT | **1.10%** |
+| Spotify Premium | Individual | Morocco | 45.00 DH | **1.25%** |
+
+Saudi Arabia prices Spotify in riyals and calls the tiers "Standard" and "Platinum". Apple TV+
+is not sold standalone in Egypt at all — it comes bundled into iCloud+. The same nominal product
+is a different product in a different market, and the site has to say so.
+
 **The denominator** is World Bank indicator `NY.GNP.PCAP.CN` — GNI per capita in current local
 currency, divided by twelve. Free, keyless, sixty years of history, every country.
 

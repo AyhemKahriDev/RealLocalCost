@@ -45,7 +45,9 @@ export function renderPair(ctx, serviceId, marketId) {
     <tbody>${rows
       .map(
         (r) => `<tr>
-        <td class="rowhead">${escapeHtml(planLabel(t, r.plan))}</td>
+        <td class="rowhead">${escapeHtml(planLabel(t, r.plan))}${
+          r.discontinued ? ` <span class="chip r" title="${escapeHtml(t("pair.discontinuedLede"))}">${escapeHtml(t("badge.discontinued"))}</span>` : ""
+        }</td>
         <td class="num">${priceCell(r, locale)}</td>
         <td class="num">${eciCell(r, income, locale, t)}</td>
         <td>${verifiedBadge(t, r)}</td>
@@ -175,7 +177,17 @@ export function renderPair(ctx, serviceId, marketId) {
 
   <div class="two-col">
     <div>
-      ${panel(t("pair.pricesTitle"), plansTable)}
+      ${panel(
+      t("pair.pricesTitle"),
+      `${plansTable}${
+        rows.some((r) => r.note)
+          ? `<div class="notes">${rows
+              .filter((r) => r.note)
+              .map((r) => `<p class="small"><b>${escapeHtml(planLabel(t, r.plan))}:</b> ${escapeHtml(r.note)}</p>`)
+              .join("")}</div>`
+          : ""
+      }`
+    )}
       ${panel(t("pair.historyTitle"), `${chart}<p class="small faint">${escapeHtml(t("pair.historyLede", { service: svc.name, market: m.nameLocal[locale] || m.name }))}</p>`)}
     </div>
     <div>

@@ -15,7 +15,8 @@
   },
   "badge": {
     "verified": "vérifié",
-    "unverified": "non vérifié"
+    "unverified": "non vérifié",
+    "discontinued": "retiré"
   },
   "method": {
     "title": "Méthode",
@@ -115,7 +116,8 @@
     "changeDown": "en baisse de {pct}% depuis {date}",
     "changeFlat": "inchangé depuis {date}",
     "startsAt": "à partir de",
-    "historyOnce": "Un seul prix enregistré pour l'instant. Le graphique se complète à mesure que des prix datés sont vérifiés."
+    "historyOnce": "Un seul prix enregistré pour l'instant. Le graphique se complète à mesure que des prix datés sont vérifiés.",
+    "discontinuedLede": "Cette offre n'est plus proposée ici. Le prix affiché est le dernier que nous avons vérifié."
   },
   "wire": {
     "title": "Le fil",
