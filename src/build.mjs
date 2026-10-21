@@ -12,11 +12,12 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { loadAll } from "./lib/data.mjs";
 import { loadSite, applySite, SITE } from "./lib/config.mjs";
+import { getBase, stripBase } from "./lib/paths.mjs";
 import { loadAllLocales, makeT, LOCALES, DIR, HTML_LANG, LOCALE_NAME } from "./lib/i18n.mjs";
 import { layout } from "./layout.mjs";
 import {
   homePath, servicePath, marketPath, pairPath, pagePath,
-  alternatesFor, toFile, LOCALES as PATH_LOCALES,
+  alternatesFor, toFile, setBase,
 } from "./lib/paths.mjs";
 import { renderHome } from "./pages/home.mjs";
 import { renderService, renderMarket } from "./pages/service.mjs";
@@ -50,6 +51,9 @@ function page(ctx, rendered, alternates) {
 
 async function main() {
   applySite(await loadSite());
+  const baseArg = process.argv.find((a) => a.startsWith("--base="));
+  setBase(baseArg ? baseArg.split("=").slice(1).join("=") : "/");
+  console.log(`building with base ${getBase()}`);
   const data = await loadAll();
   const dicts = await loadAllLocales();
 
@@ -158,10 +162,10 @@ async function main() {
 ${sitemaps
   .map(
     (s) => `  <url>
-    <loc>${s.loc}</loc>
-    <xhtml:link rel="alternate" hreflang="${HTML_LANG.en}" href="${s.alt.en}"/>
-    <xhtml:link rel="alternate" hreflang="${HTML_LANG.fr}" href="${s.alt.fr}"/>
-    <xhtml:link rel="alternate" hreflang="${HTML_LANG.ar}" href="${s.alt.ar}"/>
+    <loc>${escapeXml(SITE.url.replace(/\/$/, "") + stripBase(s.loc))}</loc>
+    <xhtml:link rel="alternate" hreflang="${HTML_LANG.en}" href="${escapeXml(SITE.url.replace(/\/$/, "") + stripBase(s.alt.en))}"/>
+    <xhtml:link rel="alternate" hreflang="${HTML_LANG.fr}" href="${escapeXml(SITE.url.replace(/\/$/, "") + stripBase(s.alt.fr))}"/>
+    <xhtml:link rel="alternate" hreflang="${HTML_LANG.ar}" href="${escapeXml(SITE.url.replace(/\/$/, "") + stripBase(s.alt.ar))}"/>
     <priority>${s.priority}</priority>
   </url>`
   )
@@ -177,6 +181,10 @@ ${sitemaps
   );
   console.log(`  markets: ${data.activeMarkets().join(", ") || "—"}`);
   console.log(`  rows: ${data.rows.length}, pairs: ${data.pairs.size}`);
+}
+
+function escapeXml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function toCsv(rows) {

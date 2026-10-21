@@ -1,5 +1,5 @@
 import { escapeHtml, latinDigits } from "./lib/fmt.mjs";
-import { homePath, pagePath, LOCALES } from "./lib/paths.mjs";
+import { homePath, pagePath, LOCALES, getBase, stripBase } from "./lib/paths.mjs";
 import { LOCALE_NAME, DIR, HTML_LANG } from "./lib/i18n.mjs";
 import { SITE } from "./lib/config.mjs";
 
@@ -18,9 +18,14 @@ export function layout(o) {
   const { t, locale, title, description, body, alternates = {}, canonical = "/" } = o;
   const dir = DIR[locale] || "ltr";
 
+  /* The hreflang alternates point at the primary site, because that is
+     where the canonical copy lives. A mirror advertises the original. */
+  const primary = SITE.url.replace(/\/$/, "");
   const altLinks = LOCALES.map(
     (l) =>
-      `<link rel="alternate" hreflang="${HTML_LANG[l]}" href="${alternates[l] ? escapeHtml(alternates[l]) : "#"}">`
+      `<link rel="alternate" hreflang="${HTML_LANG[l]}" href="${
+        alternates[l] ? escapeHtml(primary + stripBase(alternates[l])) : "#"
+      }">`
   ).join("\n    ");
 
   const nav = [
@@ -53,8 +58,8 @@ export function layout(o) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${escapeHtml(fullTitle)}</title>
   <meta name="description" content="${escapeHtml(description)}">
-  <link rel="canonical" href="${escapeHtml(SITE.url.replace(/\/$/, "") + canonical)}">
-  <meta property="og:url" content="${escapeHtml(SITE.url.replace(/\/$/, "") + canonical)}">
+  <link rel="canonical" href="${escapeHtml(SITE.url.replace(/\/$/, "") + stripBase(canonical))}">
+  <meta property="og:url" content="${escapeHtml(SITE.url.replace(/\/$/, "") + stripBase(canonical))}">
   <meta property="og:site_name" content="${escapeHtml(SITE.name)}">
   ${altLinks}
   <meta property="og:type" content="website">
@@ -64,8 +69,8 @@ export function layout(o) {
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:image" content="${escapeHtml(SITE.url.replace(/\/$/, "") + "/og.png")}">
   <meta name="twitter:image" content="${escapeHtml(SITE.url.replace(/\/$/, "") + "/og.png")}">
-  <link rel="stylesheet" href="/assets/style.css">
-  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="${getBase()}assets/style.css">
+  <link rel="icon" href="${getBase()}assets/favicon.svg" type="image/svg+xml">
 </head>
 <body>
   <header class="topnav">
@@ -87,7 +92,7 @@ ${body}
       <p class="foot-dim">${escapeHtml(t("footer.license"))} · <a href="${escapeHtml(pagePath("method", locale))}">${escapeHtml(t("nav.method"))}</a> · <a href="${escapeHtml(pagePath("data", locale))}">${escapeHtml(t("nav.data"))}</a></p>
     </div>
   </footer>
-  <script src="/assets/app.js" defer></script>
+  <script src="${getBase()}assets/app.js" defer></script>
 </body>
 </html>`;
 }

@@ -2,7 +2,7 @@ import { escapeHtml, formatPrice, formatDate, formatNumber } from "../lib/fmt.mj
 import { eci, band } from "../lib/eci.mjs";
 import { panel, verifiedBadge, num } from "../layout.mjs";
 import { barChart } from "../lib/chart.mjs";
-import { servicePath, marketPath, pairPath, pagePath } from "../lib/paths.mjs";
+import { servicePath, marketPath, pairPath, pagePath, getBase } from "../lib/paths.mjs";
 import { flagshipPlan, eciCell, priceCell, planLabel, coverageStats } from "./common.mjs";
 
 /* ============================================================
@@ -286,7 +286,7 @@ export function renderCalculator(ctx) {
       ])
     )
   )}</script>
-  <script src="/assets/calculator.js" defer></script>
+  <script src="${getBase()}assets/calculator.js" defer></script>
   `;
 
   return { title: t("calc.title"), description: t("calc.lede"), body };

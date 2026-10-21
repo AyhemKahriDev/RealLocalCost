@@ -1,10 +1,12 @@
 name: Deploy
 
-# One build, two homes:
-#   • Cloudflare Pages  → reallocalcost.pages.dev   (the canonical URL)
+# One source, two homes:
+#   • Cloudflare Pages  → reallocalcost.pages.dev          (the canonical site)
 #   • GitHub Pages      → ayhemkahridev.github.io/RealLocalCost/  (the mirror)
 #
-# Both come from the same site/ directory, so they cannot disagree.
+# The two differ only in the base path, so the site is built twice with
+# --base. The canonical URL, the sitemap and the hreflang alternates
+# always point at the Cloudflare site, because that is the original.
 
 on:
   push:
@@ -23,8 +25,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      pages-url: ${{ steps.pages.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
 
@@ -32,21 +32,13 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Build the site
-        run: node src/build.mjs
+      - name: Build for GitHub Pages
+        run: node src/build.mjs --base=/RealLocalCost/
 
       - name: Check the data
         run: node tools/check.mjs
 
-      - name: Refresh the social card
-        run: node tools/make-og.mjs
-        continue-on-error: true
-
-      - name: Rebuild with the social card in place
-        run: node src/build.mjs
-
-      - id: pages
-        uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
@@ -54,9 +46,8 @@ jobs:
 
   cloudflare:
     needs: build
-    runs-on: ubuntu-latest
-    # Neither `secrets` nor `env` is available in a job-level `if`, so the
-    # token is exposed as an env var and the deploy STEP checks it.
+    # Skipped until a Cloudflare API token is added as a repo secret.
+    # The token needs one permission: Account → Cloudflare Pages → Edit.
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -67,8 +58,8 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Build the site
-        run: node src/build.mjs
+      - name: Build for the domain root
+        run: node src/build.mjs --base=/
 
       - name: Deploy to Cloudflare Pages
         if: env.CLOUDFLARE_API_TOKEN != ''

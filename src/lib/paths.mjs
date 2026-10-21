@@ -12,29 +12,55 @@
 
 export const LOCALES = ["en", "fr", "ar"];
 
+/* The site is published at two places: a domain root, and under a
+   repository path on GitHub Pages. The base is set at build time so
+   every link and every asset resolves in both places. */
+let BASE = "/";
+export function setBase(b) {
+  BASE = b && b.startsWith("/") ? b : `/${b || ""}`;
+  if (!BASE.endsWith("/")) BASE += "/";
+  return BASE;
+}
+export function getBase() {
+  return BASE;
+}
+
+/** The path without the base — what the canonical URL should use. */
+export function stripBase(path) {
+  if (BASE !== "/" && path.startsWith(BASE)) return "/" + path.slice(BASE.length);
+  return path;
+}
+
 export function homePath(locale = "en") {
-  return locale === "en" ? "/" : `/${locale}/`;
+  return `${BASE}${locale === "en" ? "" : locale + "/"}`;
 }
 
 export function servicePath(service, locale = "en") {
-  return locale === "en" ? `/${service}/` : `/${locale}/${service}/`;
+  return `${BASE}${locale === "en" ? "" : locale + "/"}${service}/`;
 }
 
 export function marketPath(market, locale = "en") {
-  return locale === "en" ? `/m/${market}/` : `/${locale}/m/${market}/`;
+  return `${BASE}${locale === "en" ? "" : locale + "/"}m/${market}/`;
 }
 
 export function pairPath(service, market, locale = "en") {
-  return locale === "en" ? `/${service}/${market}/` : `/${locale}/${service}/${market}/`;
+  return `${BASE}${locale === "en" ? "" : locale + "/"}${service}/${market}/`;
 }
 
 export function pagePath(slug, locale = "en") {
-  return locale === "en" ? `/${slug}/` : `/${locale}/${slug}/`;
+  return `${BASE}${locale === "en" ? "" : locale + "/"}${slug}/`;
 }
 
-/** Turn a site path into a path on disk (site/<...>/index.html). */
+/**
+ * Turn a site path into a path on disk (site/<...>/index.html).
+ * The base is a URL prefix, never part of the file layout: a site
+ * published at /RealLocalCost/ and one published at / are the same
+ * files, linked differently.
+ */
 export function toFile(path) {
-  const clean = path.replace(/^\/+|\/+$/g, "");
+  let clean = path;
+  if (BASE !== "/" && clean.startsWith(BASE)) clean = clean.slice(BASE.length);
+  clean = clean.replace(/^\/+|\/+$/g, "");
   return clean ? `site/${clean}/index.html` : "site/index.html";
 }
 
